@@ -36,9 +36,62 @@
         input:focus { border-color: #ffd700; box-shadow: 0 0 12px rgba(255, 215, 0, 0.3); background: rgba(255, 255, 255, 0.08); }
         label { font-size: 13px; color: #9ca3af; font-weight: 600; }
 
-        .navbar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 25, 38, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 10px 4px; border-top: 1px solid rgba(255, 255, 255, 0.1); max-width: 480px; margin: 0 auto; z-index: 999; }
-        .nav-item { border: none; background: none; font-size: 11px; color: #9ca3af; font-weight: bold; cursor: pointer; transition: 0.3s; padding: 4px; }
-        .nav-item.active { color: #ffd700; text-shadow: 0 0 8px rgba(255, 215, 0, 0.4); }
+        /* Navbar Layout */
+        .navbar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 25, 38, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 10px 8px; border-top: 1px solid rgba(255, 255, 255, 0.1); max-width: 480px; margin: 0 auto; z-index: 999; }
+        .nav-item { border: none; background: none; font-size: 13px; color: #9ca3af; font-weight: bold; cursor: pointer; transition: 0.3s; padding: 8px 12px; border-radius: 10px; display: flex; align-items: center; gap: 4px; }
+        .nav-item.active { color: #ffd700; text-shadow: 0 0 8px rgba(255, 215, 0, 0.4); background: rgba(255, 215, 0, 0.08); }
+
+        /* Dropdown/Popup Menu CSS */
+        .menu-dropdown-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-menu-content {
+            display: none;
+            position: absolute;
+            bottom: 55px;
+            right: 0;
+            background: #161f30;
+            min-width: 160px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 14px;
+            z-index: 1000;
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+        }
+
+        .dropdown-menu-content button {
+            color: #f3f4f6;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .dropdown-menu-content button:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-menu-content button:active {
+            background-color: rgba(255, 215, 0, 0.15);
+            color: #ffd700;
+        }
+
+        .dropdown-menu-content.show {
+            display: block;
+        }
 
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
@@ -504,10 +557,16 @@
 <div class="navbar" id="app-nav" style="display:none;">
     <button class="nav-item active" onclick="switchTab('home')">🏠 হোম</button>
     <button class="nav-item" id="nav-verify-btn" onclick="switchTab('verify')">✅ ভেরিফাই</button>
-    <button class="nav-item" id="nav-job-btn" onclick="switchTab('job')">💼 কাজ</button>
-    <button class="nav-item" id="nav-withdraw-btn" onclick="switchTab('withdraw')">💸 উইথড্র</button>
-    <button class="nav-item" id="nav-history-btn" onclick="switchTab('history')">📜 হিস্ট্রি</button>
-    <button class="nav-item" id="nav-team-btn" onclick="switchTab('team')">👥 টিম</button>
+    
+    <div class="menu-dropdown-container">
+        <button class="nav-item" id="nav-more-btn" onclick="toggleMenu()">⚡ সার্ভিস ▾</button>
+        <div class="dropdown-menu-content" id="more-menu">
+            <button onclick="selectSubTab('job')">💼 কাজ</button>
+            <button onclick="selectSubTab('withdraw')">💸 উইথড্র</button>
+            <button onclick="selectSubTab('history')">📜 হিস্ট্রি</button>
+            <button onclick="selectSubTab('team')">👥 টিম</button>
+        </div>
+    </div>
 </div>
 
 <script src="app.js"></script>
