@@ -3,7 +3,7 @@ if(tg) tg.expand();
 
 let currentUser = null;
 
-// ওয়ার্নিং ও সাকসেস মেসেজ দেখানোর হেলপার ফাংশন
+// ওয়ার্নিং ও সাকসেস মেসেজ দেখানোর হেলপার ফাংশন
 function showMessage(elementId, message, isError = true) {
     const box = document.getElementById(elementId);
     if (box) {
@@ -146,7 +146,7 @@ async function renderDashboard() {
             if (expireElem) expireElem.innerText = `${diffDays} দিন বাকি (মেয়াদ: ${formattedDate})`;
         }
 
-        // ভেরিফাই ট্যাবের ভেতর ফর্ম লুকিয়ে সাকসেস মেসেজ শো করা
+        // ভেরিফাই ট্যাবের ভেতর ফর্ম লুকিয়ে সাকসেস মেসেজ শো করা
         const verifyTab = document.getElementById('tab-verify');
         if (verifyTab) {
             verifyTab.innerHTML = `
@@ -180,7 +180,7 @@ async function fetchExtraDetails() {
         const res = await fetch('/api/admin/data');
         const data = await res.json();
 
-        // সার্ভার থেকে ইউজারের লেটেস্ট তথ্য দিয়ে currentUser আপডেট
+        // সার্ভার থেকে ইউজারের লেটেস্ট তথ্য দিয়ে currentUser আপডেট
         if (data.users) {
             const updatedMe = data.users.find(u => u._id === currentUser._id);
             if (updatedMe) {
@@ -227,7 +227,7 @@ async function fetchExtraDetails() {
     } catch (e) { console.error("History Error:", e); }
 }
 
-// আপডেট করা ট্যাব সুইচিং ফাংশন (৬টি ট্যাবের নিখুঁত সিঙ্ক)
+// আপডেট করা ট্যাব সুইচিং ফাংশন
 function switchTab(tabName) {
     clearMessages();
     const today = new Date();
@@ -250,29 +250,50 @@ function switchTab(tabName) {
     const activeTab = document.getElementById(`tab-${tabName}`);
     if (activeTab) activeTab.style.display = 'block';
     
-    // নেভিগেশন বাটনে active ক্লাস যুক্ত করার সঠিক লজিক
+    // নেভিগেশন বাটনে active ক্লাস যুক্ত করার নতুন লজিক
     highlightNav(tabName);
 }
 
-// নেভিগেশন বাটন হাইলাইট করার হেলপার ফাংশন
+// নেভিগেশন বাটন হাইলাইট করার ৩-বাটন ফ্রেন্ডলি ফাংশন
 function highlightNav(tabName) {
-    const btns = document.querySelectorAll('.nav-item');
-    btns.forEach(btn => btn.classList.remove('active'));
+    const homeBtn = document.querySelectorAll('.nav-item')[0];
+    const verifyBtn = document.getElementById('nav-verify-btn');
+    const moreBtn = document.getElementById('nav-more-btn');
 
-    const tabMapping = {
-        'home': 0,
-        'verify': 1,
-        'job': 2,
-        'withdraw': 3,
-        'history': 4,
-        'team': 5
-    };
+    // আগে সব বাটন থেকে active তুলে নেওয়া
+    document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
 
-    const index = tabMapping[tabName];
-    if (index !== undefined && btns[index]) {
-        btns[index].classList.add('active');
+    if (tabName === 'home') {
+        if(homeBtn) homeBtn.classList.add('active');
+    } else if (tabName === 'verify') {
+        if(verifyBtn) verifyBtn.classList.add('active');
+    } else {
+        // কাজ, উইথড্র, হিস্ট্রি বা টিমে গেলে 'সার্ভিস' বাটন হাইলাইট হবে
+        if(moreBtn) moreBtn.classList.add('active');
     }
 }
+
+// --- ড্রপডাউন সার্ভিস মেনুর ফাংশনসমূহ ---
+function toggleMenu() {
+    const menu = document.getElementById('more-menu');
+    if (menu) menu.classList.toggle('show');
+}
+
+function selectSubTab(tabName) {
+    const menu = document.getElementById('more-menu');
+    if (menu) menu.classList.remove('show');
+    switchTab(tabName);
+}
+
+// স্ক্রিনের অন্য কোথাও ক্লিক করলে ড্রপডাউন বন্ধ হওয়া
+window.addEventListener('click', function(e) {
+    const menuBtn = document.getElementById('nav-more-btn');
+    const menuContent = document.getElementById('more-menu');
+    
+    if (menuBtn && menuContent && !menuBtn.contains(e.target) && !menuContent.contains(e.target)) {
+        menuContent.classList.remove('show');
+    }
+});
 
 // ডেইলি জব সাবমিট করা
 async function submitJob() {
