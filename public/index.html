@@ -2,320 +2,336 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earn Portal - Complete Web App</title>
+    <!-- টেলিগ্রাম ও মোবাইল কিবোর্ড রেসপন্সিভ ভিউপোর্ট -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Earn Money WebApp</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-        body { background-color: #0b0f19; color: #f3f4f6; min-height: 100vh; padding-bottom: 50px; overflow-x: hidden; }
+        body { background-color: #0b0f19; color: #f3f4f6; padding-bottom: 80px; overflow-x: hidden; touch-action: pan-y; }
+        .container { max-width: 480px; margin: 0 auto; padding: 15px; }
+        .card { background: #161f30; padding: 18px; border-radius: 16px; margin-bottom: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #0088cc, #005580); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 15px; letter-spacing: 0.5px; transition: all 0.3s ease; }
+        .btn-danger { background: linear-gradient(135deg, #ff416c, #ff4b2b); }
         
-        /* Single Column Layout Container */
-        .container { max-width: 650px; margin: 0 auto; padding: 15px; }
-
-        /* Top Header */
-        .web-header {
-            background: rgba(18, 25, 38, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+        /* ইনপুট ফিল্ড ও ক্লিক ল্যাগ ফিক্স */
+        input, button, select, textarea {
+            -webkit-user-select: text !important;
+            user-select: text !important;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
+        input { width: 100%; padding: 12px 16px; margin: 8px 0 14px; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 15px; outline: none; transition: all 0.3s ease; }
+        input:focus { border-color: #ffd700; box-shadow: 0 0 12px rgba(255, 215, 0, 0.3); background: rgba(255, 255, 255, 0.08); }
+        label { font-size: 13px; color: #9ca3af; font-weight: 600; }
 
-        .web-logo {
-            font-size: 20px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #ffd700, #ff8c00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        /* Bottom Navigation Bar */
+        .navbar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 25, 38, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); max-width: 480px; margin: 0 auto; z-index: 999; }
+        .nav-item { border: none; background: none; font-size: 12px; color: #9ca3af; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { color: #ffd700; text-shadow: 0 0 8px rgba(255, 215, 0, 0.4); }
 
-        /* Card System (Ek Serial / Vertical Stack) */
-        .card { 
-            background: #161f30; 
-            padding: 20px; 
-            border-radius: 16px; 
-            margin-bottom: 15px; 
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            width: 100%;
-        }
-
-        .btn { 
-            width: 100%; 
-            padding: 14px; 
-            background: linear-gradient(135deg, #0088cc, #005580); 
-            color: white; 
-            border: none; 
-            border-radius: 12px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            font-size: 15px; 
-            transition: all 0.3s ease; 
-        }
-
-        input { 
-            width: 100%; 
-            padding: 14px 16px; 
-            margin: 8px 0 16px; 
-            border: 1px solid rgba(255, 255, 255, 0.15); 
-            border-radius: 10px; 
-            background: rgba(255, 255, 255, 0.05); 
-            color: #fff; 
-            font-size: 15px; 
-            outline: none; 
-        }
-        input:focus { border-color: #ffd700; box-shadow: 0 0 12px rgba(255, 215, 0, 0.3); }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
         .table-custom { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; color: #d1d5db; }
         .table-custom th, .table-custom td { border: 1px solid rgba(255,255,255,0.08); padding: 10px; text-align: left; }
         .table-custom th { background: rgba(255, 255, 255, 0.05); color: #ffd700; }
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; }
+        .bg-pending { background: #ffc107; color: #000; }
+        .bg-approved { background: #28a745; color: #fff; }
+        .bg-rejected { background: #dc3545; color: #fff; }
 
-        /* World Animation Overlay */
-        #withdraw-entry-animation {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at center, #111827 0%, #030712 100%);
-            z-index: 9999;
+        /* Luxury Profile Styling */
+        .luxury-profile-card {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .luxury-profile-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, rgba(255,215,0,0) 70%);
+            border-radius: 50%;
+        }
+
+        .profile-header { display: flex; align-items: center; gap: 15px; }
+
+        .avatar-box {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(45deg, #ffd700, #ffa500);
+            border-radius: 50%;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            padding: 20px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease-in-out;
+            font-size: 26px;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
         }
-        #withdraw-entry-animation.active { opacity: 1; pointer-events: all; }
-        .globe-wrapper { position: relative; width: 120px; height: 120px; margin-bottom: 20px; }
-        .globe-icon { font-size: 80px; animation: spin-world 4s linear infinite; filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.6)); }
-        @keyframes spin-world { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .globe-ring { position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px; border: 2px dashed #ffd700; border-radius: 50%; animation: spin-ring 6s linear infinite reverse; }
-        @keyframes spin-ring { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .anim-text-funny { font-size: 20px; font-weight: 800; background: linear-gradient(135deg, #ffd700, #ff8c00, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.5; margin-bottom: 10px; }
 
-        /* Profile Photo Box */
-        .avatar-container { width: 85px; height: 85px; position: relative; cursor: pointer; margin: 0 auto 12px; }
-        .avatar-box { width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(45deg, #ffd700, #ffa500); display: flex; align-items: center; justify-content: center; font-size: 38px; overflow: hidden; border: 3px solid #ffd700; }
-        .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
-        .avatar-upload-icon { position: absolute; bottom: 0; right: 0; background: #ffd700; color: #000; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+        .user-info h3 { font-size: 20px; font-weight: 700; color: #ffffff; }
 
-        /* Vertical Navigation Menu Items (একটির নিচে আরেকটি) */
-        .vertical-menu-list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-        
-        .menu-item-btn {
+        .status-badge-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-top: 5px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background-color: #28a745;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #28a745;
+        }
+
+        .status-text { font-size: 13px; font-weight: 600; color: #e5e7eb; }
+
+        .expire-badge {
+            margin-top: 12px;
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            color: #ffd700;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .luxury-stat-box {
+            background: #1e293b;
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-icon { font-size: 28px; background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 12px; }
+        .stat-data h4 { font-size: 12px; color: #9ca3af; text-transform: uppercase; }
+        .stat-data p { font-size: 20px; font-weight: 800; color: #ffffff; }
+
+        .luxury-ref-card {
+            background: linear-gradient(135deg, #111827, #1f2937);
+            color: #fff;
+            text-align: center;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .ref-header { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
+        .ref-code-box { background: rgba(255, 255, 255, 0.05); border: 1px dashed #ffd700; padding: 12px; border-radius: 10px; margin: 8px 0; }
+        .ref-code-box p { font-size: 22px; font-weight: 800; letter-spacing: 2px; color: #ffd700; }
+        .ref-subtext { font-size: 12px; color: #9ca3af; }
+
+        .luxury-logout-btn {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            border: none;
+            box-shadow: 0 4px 12px rgba(255, 75, 43, 0.3);
+            margin-top: 15px;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* ULTRA LUXURY 50,000$ DAILY JOB CARD STYLING */
+        /* ------------------------------------------------------------- */
+        .luxury-job-card {
+            background: linear-gradient(145deg, #0f172a, #1e1b4b);
+            border: 1px solid rgba(255, 215, 0, 0.35);
+            border-radius: 20px;
+            padding: 24px 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .luxury-job-card::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.25) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .job-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 12px;
+        }
+
+        .job-badge-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+
+        .job-live-indicator {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #4ade80;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            animation: pulse-glow 2s infinite;
+        }
+
+        .job-live-dot {
+            width: 7px;
+            height: 7px;
+            background: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #22c55e;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+
+        .job-reward-banner {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(245, 158, 11, 0.05));
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            padding: 14px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 15px 18px;
-            border-radius: 12px;
-            color: #f3f4f6;
-            font-size: 15px;
+            margin-bottom: 22px;
+        }
+
+        .reward-info-left small {
+            display: block;
+            color: #9ca3af;
+            font-size: 11px;
+            text-transform: uppercase;
             font-weight: 700;
+        }
+
+        .reward-info-left span {
+            font-size: 22px;
+            font-weight: 900;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .reward-icon-chip {
+            font-size: 30px;
+            background: rgba(255, 215, 0, 0.1);
+            padding: 8px 12px;
+            border-radius: 12px;
+        }
+
+        .question-box-wrapper {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .question-box-wrapper label {
+            display: block;
+            margin-bottom: 6px;
+            color: #6b7280;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .question-text {
+            font-size: 20px;
+            font-weight: 800;
+            color: #38bdf8;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+        }
+
+        .input-luxury-wrap {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .input-luxury-wrap input {
+            background: rgba(15, 23, 42, 0.8) !important;
+            border: 1.5px solid rgba(255, 215, 0, 0.3) !important;
+            padding: 16px !important;
+            border-radius: 14px !important;
+            font-size: 16px !important;
+            color: #ffffff !important;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .input-luxury-wrap input::placeholder {
+            color: #4b5563;
+            font-weight: 400;
+        }
+
+        .btn-luxury-submit {
+            background: linear-gradient(135deg, #ffd700, #f59e0b) !important;
+            color: #0f172a !important;
+            font-size: 16px !important;
+            font-weight: 900 !important;
+            padding: 16px !important;
+            border-radius: 14px !important;
+            border: none !important;
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.35) !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: left;
-            width: 100%;
         }
 
-        .menu-item-btn:hover, .menu-item-btn:active {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: #ffd700;
-            transform: translateX(4px);
+        .btn-luxury-submit:active {
+            transform: scale(0.98);
         }
-
-        .menu-item-btn .left-content { display: flex; align-items: center; gap: 12px; }
-        .menu-item-btn .arrow { color: #9ca3af; font-size: 14px; }
     </style>
 </head>
 <body>
 
-<!-- TOP WEBSITE HEADER -->
-<div class="web-header">
-    <div class="web-logo">💎 EARN PORTAL</div>
-    <div style="font-size: 13px; color: #9ca3af;" id="user-top-status">গেস্ট</div>
-</div>
-
-<!-- WORLD ANIMATION OVERLAY -->
-<div id="withdraw-entry-animation">
-    <div class="globe-wrapper">
-        <div class="globe-ring"></div>
-        <div class="globe-icon">🌍</div>
-    </div>
-    <div class="anim-text-funny">
-        টাকা তুলে বউ নিয়ে হানিমুনে যাবেন তাইনা? 😜哈哈哈
-    </div>
-    <div style="color: #9ca3af; font-size: 13px; text-transform: uppercase;">
-        🔒 নিরাপদ উইথড্র গেটওয়ে লোড হচ্ছে...
-    </div>
-</div>
-
 <div class="container">
 
-    <!-- MAIN NAVIGATION MENU LIST (আপনার সিরিয়াল অনুযায়ী) -->
-    <div class="card" id="main-navigation-card">
-        <h3 style="color:#ffd700; margin-bottom:12px; font-size:16px;">📌 মেনু তালিকা</h3>
-        
-        <div class="vertical-menu-list">
-            <!-- 1. Home -->
-            <button class="menu-item-btn" onclick="showSection('page-home')">
-                <div class="left-content"><span>🏠</span> Home</div>
-                <span class="arrow">➔</span>
-            </button>
-
-            <!-- 2. Withdraw -->
-            <button class="menu-item-btn" onclick="triggerWithdrawAnim()">
-                <div class="left-content"><span>💸</span> Withdraw</div>
-                <span class="arrow">➔</span>
-            </button>
-
-            <!-- 3. History -->
-            <button class="menu-item-btn" onclick="showSection('page-history')">
-                <div class="left-content"><span>📜</span> History</div>
-                <span class="arrow">➔</span>
-            </button>
-
-            <!-- 4. Referral Program -->
-            <button class="menu-item-btn" onclick="showSection('page-referral')">
-                <div class="left-content"><span>👥</span> Referral Program</div>
-                <span class="arrow">➔</span>
-            </button>
-
-            <!-- 5. Live Support -->
-            <button class="menu-item-btn" onclick="showSection('page-support')">
-                <div class="left-content"><span>🎧</span> Live Support</div>
-                <span class="arrow">➔</span>
-            </button>
-
-            <!-- Auth Buttons (Login, Register, Reset) -->
-            <div id="auth-menu-items">
-                <!-- 6. Register -->
-                <button class="menu-item-btn" onclick="showSection('page-register')">
-                    <div class="left-content"><span>📝</span> Register</div>
-                    <span class="arrow">➔</span>
-                </button>
-
-                <!-- 7. Login -->
-                <button class="menu-item-btn" onclick="showSection('page-login')">
-                    <div class="left-content"><span>🔑</span> Login</div>
-                    <span class="arrow">➔</span>
-                </button>
-
-                <!-- 8. Reset Password -->
-                <button class="menu-item-btn" onclick="showSection('page-reset')">
-                    <div class="left-content"><span>🔄</span> Reset Password</div>
-                    <span class="arrow">➔</span>
-                </button>
-            </div>
-
-            <!-- Logout Button (Shows when logged in) -->
-            <button class="menu-item-btn" id="btn-logout-menu" style="display:none; background:rgba(239, 68, 68, 0.15); border-color:#ef4444;" onclick="logout()">
-                <div class="left-content"><span style="color:#ef4444;">🚪</span> Logout</div>
-                <span class="arrow">➔</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- SECTIONS / PAGES DISPLAY AREA -->
-    
-    <!-- 1. HOME PAGE -->
-    <div id="page-home" class="page-content" style="display:none;">
-        <button class="btn" style="margin-bottom:12px; background:#374151;" onclick="backToMain()">⬅️ ব্যাক টু মেনু</button>
-        
-        <!-- Profile Card with Photo Upload -->
-        <div class="card" style="text-align:center;">
-            <div class="avatar-container" onclick="document.getElementById('profile-photo-input').click()">
-                <div class="avatar-box" id="avatar-box-display">
-                    <span id="u-avatar">👤</span>
-                </div>
-                <div class="avatar-upload-icon">📷</div>
-            </div>
-            <input type="file" id="profile-photo-input" accept="image/*" style="display:none;" onchange="uploadProfilePhoto(event)">
-            <h3 id="u-name" style="color:#fff;">ইউজার নাম</h3>
-            <p id="u-status" style="color:#28a745; font-size:13px; margin-top:4px;">...</p>
+    <!-- Auth Section (Login / Register) -->
+    <div id="auth-section">
+        <div id="login-form" class="card">
+            <h2 style="color:#fff; margin-bottom:15px;">লগইন করুন</h2>
+            <label>মোবাইল নম্বর</label>
+            <input type="text" id="login-mobile" placeholder="017xxxxxxxx">
+            <label>পাসওয়ার্ড</label>
+            <input type="password" id="login-password" placeholder="******">
+            <button class="btn" onclick="login()">লগইন</button>
+            <p style="margin-top:15px; text-align:center; font-size:14px; color:#9ca3af;">একাউন্ট নেই? <a href="#" onclick="showRegister()" style="color:#38bdf8;">রেজিস্ট্রেশন করুন</a></p>
         </div>
 
-        <div class="card" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
-            <h4 style="color:#9ca3af; font-size:12px;">বর্তমান ব্যালেন্স</h4>
-            <p style="font-size:32px; font-weight:900; color:#ffd700; margin-top:5px;">৳<span id="u-balance">0</span></p>
-        </div>
-
-        <div class="card" style="background: linear-gradient(135deg, #0f172a, #1e1b4b); border:1px solid rgba(255,215,0,0.3);">
-            <h3 style="color:#fff; margin-bottom:10px;">⚡ দৈনিক টাস্ক</h3>
-            <div style="text-align:center; background:rgba(255,255,255,0.03); padding:15px; border-radius:10px; margin-bottom:12px;">
-                <p id="job-q" style="font-size:20px; font-weight:800; color:#38bdf8;">প্রশ্ন লোড হচ্ছে...</p>
-            </div>
-            <input type="text" id="job-ans" placeholder="সঠিক উত্তর লিখুন..." style="text-align:center; font-size:15px;">
-            <button class="btn" style="background:linear-gradient(135deg, #ffd700, #f59e0b); color:#000; font-weight:900;" onclick="submitJob()">✨ উত্তর জমা দিন (৳৫০)</button>
-        </div>
-    </div>
-
-    <!-- 2. WITHDRAW PAGE -->
-    <div id="page-withdraw" class="page-content" style="display:none;">
-        <button class="btn" style="margin-bottom:12px; background:#374151;" onclick="backToMain()">⬅️ ব্যাক টু মেনু</button>
-        <div class="card" style="background: linear-gradient(135deg, #111827, #31103f); border:1px solid rgba(236,72,153,0.4);">
-            <h3 style="color:#ec4899; margin-bottom:15px;">💸 Instant Withdraw</h3>
-            <label>বিকাশ/নগদ নম্বর</label>
-            <input type="text" id="w-number" placeholder="017xxxxxxxx">
-            <label>উইথড্র পরিমাণ (সর্বনিম্ন ৳৫০)</label>
-            <input type="number" id="w-amount" placeholder="500">
-            <small style="color:#f472b6; display:block; margin-bottom:15px;">⚡ ১৫% সার্ভিস চার্জ প্রযোজ্য</small>
-            <button class="btn" style="background:linear-gradient(135deg, #ec4899, #8b5cf6);" onclick="submitWithdraw()">🔥 ক্যাশ আউট রিকোয়েস্ট</button>
-        </div>
-    </div>
-
-    <!-- 3. HISTORY PAGE -->
-    <div id="page-history" class="page-content" style="display:none;">
-        <button class="btn" style="margin-bottom:12px; background:#374151;" onclick="backToMain()">⬅️ ব্যাক টু মেনু</button>
-        <div class="card">
-            <h3 style="color:#fff; margin-bottom:12px;">📜 Transaction & Withdraw History</h3>
-            <table class="table-custom">
-                <thead><tr><th>তারিখ</th><th>পরিমাণ</th><th>স্ট্যাটাস</th></tr></thead>
-                <tbody id="withdraw-history"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- 4. REFERRAL PROGRAM PAGE -->
-    <div id="page-referral" class="page-content" style="display:none;">
-        <button class="btn" style="margin-bottom:12px; background:#374151;" onclick="backToMain()">⬅️ ব্যাক টু মেনু</button>
-        <div class="card" style="text-align:center;">
-            <h3 style="color:#fff;">👥 Referral Program</h3>
-            <div style="background:rgba(255,255,255,0.05); border:1px dashed #ffd700; padding:12px; border-radius:10px; margin:12px 0;">
-                <p id="u-refcode" style="font-size:22px; font-weight:800; color:#ffd700;">---</p>
-            </div>
-            <p style="color:#9ca3af; font-size:13px; margin-bottom:15px;">প্রতিটি রেফারাল ভেরিফাইড হলে পাবেন <b style="color:#ffd700;">৳৪০</b></p>
-            
-            <h4 style="color:#fff; text-align:left; margin-bottom:10px;">আমার রেফারাল তালিকা (<span id="team-count">0</span>)</h4>
-            <table class="table-custom">
-                <thead><tr><th>নাম</th><th>মোবাইল</th><th>স্ট্যাটাস</th></tr></thead>
-                <tbody id="team-list"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- 5. LIVE SUPPORT PAGE -->
-    <div id="page-support" class="page-content" style="display:none;">
-        <button class="btn" style="margin-bottom:12px; background:#374151;" onclick="backToMain()">⬅️ ব্যাক টু মেনু</button>
-        <div class="card" style="text-align:center;">
-            <h3 style="color:#fff; margin-bottom:10px;">🎧 Live Support</h3>
-            <p style="color:#9ca3af; font-size:14px; margin-bottom:15px;">যেকোনো সমস্যায় আমাদের টেলিগ্রাম সাপোর্টে যোগাযোগ করুন।</p>
-            <a href="https://t.me/" target="_blank" class="btn" style="text-decoration:none; display:block;">📲 টেলিগ্রাম কাস্টমার কেয়ার</a>
-        </div>
-    </div>
-
-    <!-- 6. REGISTER PAGE -->
-    <div id="page-register" class="page-content" style="display:none;">
-        <button class="btn" style="margin-bottom:12px; background:#374151;" onclick="backToMain()">⬅️ ব্যাক টু মেনু</button>
-        <div class="card">
-            <h3 style="color:#fff; margin-bottom:15px;">📝 Register</h3>
+        <div id="register-form" class="card" style="display:none;">
+            <h2 style="color:#fff; margin-bottom:15px;">রেজিস্ট্রেশন করুন</h2>
             <label>আপনার নাম</label>
             <input type="text" id="reg-name" placeholder="আপনার নাম">
             <label>মোবাইল নম্বর</label>
@@ -324,70 +340,178 @@
             <input type="text" id="reg-ref" placeholder="REF123456">
             <label>পাসওয়ার্ড</label>
             <input type="password" id="reg-password" placeholder="******">
-            <button class="btn" onclick="register()">রেজিস্টার করুন</button>
+            <button class="btn" onclick="register()">রেজিস্টার</button>
+            <p style="margin-top:15px; text-align:center; font-size:14px; color:#9ca3af;">আগে থেকেই একাউন্ট আছে? <a href="#" onclick="showLogin()" style="color:#38bdf8;">লগইন করুন</a></p>
         </div>
     </div>
 
-    <!-- 7. LOGIN PAGE -->
-    <div id="page-login" class="page-content" style="display:none;">
-        <button class="btn" style="margin-bottom:12px; background:#374151;" onclick="backToMain()">⬅️ ব্যাক টু মেনু</button>
-        <div class="card">
-            <h3 style="color:#fff; margin-bottom:15px;">🔑 Login</h3>
-            <label>মোবাইল নম্বর</label>
-            <input type="text" id="login-mobile" placeholder="017xxxxxxxx">
-            <label>পাসওয়ার্ড</label>
-            <input type="password" id="login-password" placeholder="******">
-            <button class="btn" onclick="login()">লগইন করুন</button>
+    <!-- Main Application Section -->
+    <div id="dashboard-section" style="display:none;">
+        
+        <!-- Account Lock Warning for Unverified User -->
+        <div id="unverified-warning" class="card" style="background:rgba(245, 158, 11, 0.15); border:1px solid #f59e0b; color:#fbbf24; display:none;">
+            ⚠️ <b>একাউন্ট আনভেরিফাইড!</b> সকল অপশন (কাজ, উইথড্র, টিম) ব্যবহার করতে ৳৫০০ দিয়ে একাউন্ট ভেরিফাই করুন।
         </div>
-    </div>
 
-    <!-- 8. RESET PASSWORD PAGE -->
-    <div id="page-reset" class="page-content" style="display:none;">
-        <button class="btn" style="margin-bottom:12px; background:#374151;" onclick="backToMain()">⬅️ ব্যাক টু মেনু</button>
-        <div class="card">
-            <h3 style="color:#fff; margin-bottom:15px;">🔄 Reset Password</h3>
-            <label>আপনার মোবাইল নম্বর</label>
-            <input type="text" placeholder="017xxxxxxxx">
-            <label>নতুন পাসওয়ার্ড</label>
-            <input type="password" placeholder="******">
-            <button class="btn" onclick="alert('পাসওয়ার্ড রিসেট রিকোয়েস্ট সফল হয়েছে!')">পাসওয়ার্ড রিসেট করুন</button>
+        <!-- TAB 1: HOME / PROFILE (Luxury & Professional Design) -->
+        <div id="tab-home" class="tab-content">
+            <!-- Luxury Profile Header Card -->
+            <div class="card luxury-profile-card">
+                <div class="profile-header">
+                    <div class="avatar-box">
+                        <span id="u-avatar">👤</span>
+                    </div>
+                    <div class="user-info">
+                        <h3><span id="u-name">লোডিং...</span></h3>
+                        <div class="status-badge-wrap">
+                            <span class="status-indicator"></span>
+                            <span id="u-status" class="status-text">...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="expire-timer-box" class="expire-badge" style="display:none;">
+                    ⏳ মেয়াদের বাকি: <b id="u-expire">--</b>
+                </div>
+            </div>
+
+            <!-- Luxury Balance & Stats Grid -->
+            <div class="stat-grid">
+                <div class="stat-box luxury-stat-box balance-box">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-data">
+                        <h4>বর্তমান ব্যালেন্স</h4>
+                        <p>৳<span id="u-balance">0</span></p>
+                    </div>
+                </div>
+                <div class="stat-box luxury-stat-box income-box">
+                    <div class="stat-icon">💎</div>
+                    <div class="stat-data">
+                        <h4>মোট ইনকাম</h4>
+                        <p>৳<span id="u-total-earned">0</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Referral Card -->
+            <div class="card luxury-ref-card" style="margin-top:15px;">
+                <div class="ref-header">
+                    <span class="ref-icon">🎁</span>
+                    <h4 style="margin:0;">আপনার রেফার কোড</h4>
+                </div>
+                <div class="ref-code-box">
+                    <p id="u-refcode" style="margin:0;">---</p>
+                </div>
+                <p class="ref-subtext">প্রতিটি সফল ভেরিফাইড রেফারে পাবেন <b style="color:#ffd700;">৳৪০</b> বোনাস!</p>
+            </div>
+            
+            <button class="btn luxury-logout-btn" onclick="logout()">🚪 অ্যাকাউন্ট থেকে লগআউট</button>
         </div>
+
+        <!-- TAB 2: VERIFICATION -->
+        <div id="tab-verify" class="tab-content" style="display:none;">
+            <div class="card">
+                <h3 style="color:#fff; margin-bottom:10px;">একাউন্ট ভেরিফিকেশন (৩০ দিন)</h3>
+                <p style="font-size:13px; color:#9ca3af; margin: 8px 0;">নিচের বিকাশ নম্বরে ৳৫০০ Send Money করুন এবং TrxID নিচে লিখুন:</p>
+                <p style="background:rgba(255,255,255,0.08); padding:12px; border-radius:8px; font-weight:bold; text-align:center; color:#ffd700; font-size:18px;" id="verify-bkash-num">013637839238</p>
+                
+                <label style="margin-top:12px; display:block;">আপনার বিকাশ নম্বর</label>
+                <input type="text" id="v-bkash" placeholder="017xxxxxxxx">
+                <label>TrxID (ট্রানজেকশন আইডি)</label>
+                <input type="text" id="v-trx" placeholder="9X87YYZZ">
+                <button class="btn" onclick="submitVerification()">ভেরিফিকেশন সাবমিট করুন</button>
+            </div>
+        </div>
+
+        <!-- TAB 3: DAILY JOB ($50,000 ULTRA LUXURY DESIGN) -->
+        <div id="tab-job" class="tab-content" style="display:none;">
+            <div class="card luxury-job-card">
+                
+                <div class="job-top-bar">
+                    <div class="job-badge-title">
+                        <span>⚡</span> দৈনিক স্পেশাল টাস্ক
+                    </div>
+                    <div class="job-live-indicator">
+                        <span class="job-live-dot"></span> সক্রিয় কাজ
+                    </div>
+                </div>
+
+                <div class="job-reward-banner">
+                    <div class="reward-info-left">
+                        <small>টাস্ক রিওয়ার্ড বোনাস</small>
+                        <span>৳৫০.০০</span>
+                    </div>
+                    <div class="reward-icon-chip">
+                        💎
+                    </div>
+                </div>
+
+                <div class="question-box-wrapper">
+                    <label>আজকের গাণিতিক চ্যালেঞ্জ</label>
+                    <p id="job-q" class="question-text">প্রশ্ন লোড হচ্ছে...</p>
+                </div>
+
+                <div class="input-luxury-wrap">
+                    <input type="text" id="job-ans" placeholder="সঠিক উত্তর এখানে লিখুন..." autocomplete="off">
+                </div>
+
+                <button class="btn btn-luxury-submit" onclick="submitJob()">
+                    ✨ উত্তর জমা দিয়ে ৳৫০ নিন
+                </button>
+
+            </div>
+        </div>
+
+        <!-- TAB 4: WITHDRAW -->
+        <div id="tab-withdraw" class="tab-content" style="display:none;">
+            <div class="card">
+                <h3 style="color:#fff; margin-bottom:12px;">টাকা তুলুন (Withdraw)</h3>
+                <label>বিকাশ/নগদ নম্বর</label>
+                <input type="text" id="w-number" placeholder="017xxxxxxxx">
+                <label>পরিমাণ (সর্বনিম্ন ৳৫০)</label>
+                <input type="number" id="w-amount" placeholder="300">
+                <small style="color:#9ca3af; display:block; margin-bottom:12px;">*১৫% সার্ভিস চার্জ প্রযোজ্য</small>
+                <button class="btn" onclick="submitWithdraw()">উইথড্র রিকোয়েস্ট দিন</button>
+            </div>
+        </div>
+
+        <!-- TAB 5: HISTORY & TEAM -->
+        <div id="tab-team" class="tab-content" style="display:none;">
+            <div class="card">
+                <h3 style="color:#fff; margin-bottom:10px;">আমার টিম (রেফারাল তালিকা)</h3>
+                <p style="font-size:13px; color:#9ca3af;">মোট রেফারাল: <b id="team-count" style="color:#ffd700;">0</b> জন</p>
+                <table class="table-custom">
+                    <thead><tr><th>নাম</th><th>মোবাইল</th><th>স্ট্যাটাস</th></tr></thead>
+                    <tbody id="team-list"></tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3 style="color:#fff; margin-bottom:10px;">উইথড্র হিস্ট্রি</h3>
+                <table class="table-custom">
+                    <thead><tr><th>তারিখ</th><th>পরিমাণ</th><th>স্ট্যাটাস</th></tr></thead>
+                    <tbody id="withdraw-history"></tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <a id="support-link" href="#" target="_blank" class="btn" style="text-align:center; text-decoration:none; display:block;">💬 টেলিগ্রাম সাপোর্টে কথা বলুন</a>
+            </div>
+        </div>
+
     </div>
 
 </div>
 
-<script>
-    function triggerWithdrawAnim() {
-        const animOverlay = document.getElementById('withdraw-entry-animation');
-        animOverlay.classList.add('active');
-        setTimeout(() => {
-            animOverlay.classList.remove('active');
-            showSection('page-withdraw');
-        }, 2200);
-    }
+<!-- Bottom Navigation Tabs -->
+<div class="navbar" id="app-nav" style="display:none;">
+    <button class="nav-item active" onclick="switchTab('home')">🏠 হোম</button>
+    <button class="nav-item" id="nav-verify-btn" onclick="switchTab('verify')">✅ ভেরিফাই</button>
+    <button class="nav-item" id="nav-job-btn" onclick="switchTab('job')">💼 কাজ</button>
+    <button class="nav-item" id="nav-withdraw-btn" onclick="switchTab('withdraw')">💸 উইথড্র</button>
+    <button class="nav-item" id="nav-team-btn" onclick="switchTab('team')">👥 টিম & হিস্ট্রি</button>
+</div>
 
-    function showSection(sectionId) {
-        document.querySelectorAll('.page-content').forEach(page => page.style.display = 'none');
-        document.getElementById('main-navigation-card').style.display = 'none';
-        document.getElementById(sectionId).style.display = 'block';
-    }
-
-    function backToMain() {
-        document.querySelectorAll('.page-content').forEach(page => page.style.display = 'none');
-        document.getElementById('main-navigation-card').style.display = 'block';
-    }
-
-    function uploadProfilePhoto(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('avatar-box-display').innerHTML = `<img src="${e.target.result}" alt="Profile">`;
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-</script>
 <script src="app.js"></script>
 </body>
 </html>
