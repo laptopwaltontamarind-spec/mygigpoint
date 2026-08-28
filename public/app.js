@@ -1,0 +1,242 @@
+const tg = window.Telegram?.WebApp;
+if(tg) tg.expand();
+
+let currentUser = null;
+
+// অ্যাপ শুরুতেই সেটিং লোড করা
+async function loadSiteSettings() {
+    try {
+        const res = await fetch('/api/settings');
+        const data = await res.json();
+        if(document.getElementById('job-q')) document.getElementById('job-q').innerText = "প্রশ্ন: " + data.dailyJobQuestion;
+        if(document.getElementById('verify-bkash-num')) document.getElementById('verify-bkash-num').innerText = data.verificationBkashNumber;
+        if(document.getElementById('support-link')) document.getElementById('support-link').href = "https://t.me/" + data.supportTelegram.replace('@', '');
+    } catch (err) {
+        console.error("Error loading settings:", err);
+    }
+}
+loadSiteSettings();
+
+function showRegister() {
+    document.getElementById('login-form').style.display = 'none';
+    document.getElementById('register-form').style.display = 'block';
+}
+
+function showLogin() {
+    document.getElementById('register-form').style.display = 'none';
+    document.getElementById('login-form').style.display = 'block';
+}
+
+// অ্যাকাউন্ট রেজিস্ট্রেশন
+async function register() {
+    const name = document.getElementById('reg-name').value;
+    const mobile = document.getElementById('reg-mobile').value;
+    const referralId = document.getElementById('reg-ref').value;
+    const password = document.getElementById('reg-password').value;
+
+    if (!name || !mobile || !password) return alert("সবগুলো ঘর পূরণ করুন!");
+
+    const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, mobile, referralId, password })
+    });
+    const data = await res.json();
+    alert(data.message);
+    if (data.success) showLogin();
+}
+
+// অ্যাকাউন্ট লগইন
+async function login() {
+    const mobile = document.getElementById('login-mobile').value;
+    const password = document.getElementById('login-password').value;
+
+    if (!mobile || !password) return alert("মোবাইল নম্বর ও পাসওয়ার্ড প্রদান করুন!");
+
+    const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mobile, password })
+    });
+    const data = await res.json();
+    if (data.success) {
+        currentUser = data.user;
+        localStorage.setItem('user', JSON.stringify(currentUser));
+        renderDashboard();
+    } else {
+        alert(data.message);
+    }
+}
+
+// ড্যাশবোর্ড আপডেট ও রেন্ডারিং
+async function renderDashboard() {
+    document.getElementById('auth-section').style.display = 'none';
+    document.getElementById('dashboard-section').style.display = 'block';
+    document.getElementById('app-nav').style.display = 'flex';
+
+    document.getElementById('u-name').innerText = currentUser.name;
+    document.getElementById('u-balance').innerText = currentUser.balance;
+    document.getElementById('u-refcode').innerText = currentUser.ownReferralCode;
+
+    const statusElem = document.getElementById('u-status');
+    const warningBox = document.getElementById('unverified-warning');
+    const timerBox = document.getElementById('expire-timer-box');
+
+    // একাউন্ট ভেরিফাইড কি না চেক করা
+    if (currentUser.isVerified) {
+        statusElem.innerText = "ভেরিফাইড ✅ (৩০ দিন মেয়াদী)";
+        statusElem.style.color = "green";
+        warningBox.style.display = "none";
+        
+        // মেয়াদের দিন হিসাব করা
+        if(currentUser.verifiedExpireDate) {
+            timerBox.style.display = "block";
+            const diffDays = Math.ceil((new Date(currentUser.verifiedExpireDate) - new Date()) / (1000 * 60 * 60 * 24));
+            document.getElementById('u-expire').innerText = `${diffDays > 0 ? diffDays : 0} দিন বাকি`;
+        }
+    } else {
+        statusElem.innerText = "আনভেরিফাইড ❌";
+        statusElem.style.color = "red";
+        warningBox.style.display = "block";
+        timerBox.style.display = "none";
+        switchTab('verify'); // আনভেরিফাইড হলে সরাসরী ভেরিফাই ট্যাবে নিয়ে যাবে
+    }
+
+    // টিম ও হিস্ট্রি ডাটা লোড
+    fetchExtraDetails();
+}
+
+// অতিরিক্ত হিস্ট্রি ডাটা (উইথড্র ও টিম লিস্ট)
+async function fetchExtraDetails() {
+    try {
+        const res = await fetch('/api/admin/data');
+        const data = await res.json();
+
+        // ১. টিম/রেফারাল ফিল্টার
+        const myTeam = data.users.filter(u => u.referralId === currentUser.ownReferralCode);
+        document.getElementById('team-count').innerText = myTeam.length;
+        document.getElementById('team-list').innerHTML = myTeam.length ? myTeam.map(t => `
+            <tr>
+                <td>${t.name}</td>
+                <td>${t.mobile}</td>
+                <td>${t.isVerified ? '✅ Verified' : '❌ Unverified'}</td>
+            </tr>
+        `).join('') : '<tr><td colspan="3">কেউ আপনার রেফারে জয়েন করেনি</td></tr>';
+
+        // ২. উইথড্র হিস্ট্রি ফিল্টার
+        const myWithdraws = data.withdraws.filter(w => w.userId && (w.userId._id === currentUser._id || w.userId === currentUser._id));
+        document.getElementById('withdraw-history').innerHTML = myWithdraws.length ? myWithdraws.map(w => `
+            <tr>
+                <td>${new Date(w.createdAt).toLocaleDateString()}</td>
+                <td>৳${w.amount}</td>
+                <td><span class="badge bg-${w.status.toLowerCase()}">${w.status}</span></td>
+            </tr>
+        `).join('') : '<tr><td colspan="3">কোনো উইথড্র রেকর্ড নেই</td></tr>';
+
+        // ৩. মোট আর্নিং ক্যালকুলেশন
+        let totalEarned = currentUser.balance;
+        myWithdraws.forEach(w => { if(w.status === 'Approved') totalEarned += w.amount; });
+        document.getElementById('u-total-earned').innerText = totalEarned;
+
+    } catch (e) { console.error("History Error:", e); }
+}
+
+// ট্যাব সুইচিং ফাংশন
+function switchTab(tabName) {
+    if (!currentUser.isVerified && tabName !== 'verify' && tabName !== 'home') {
+        alert("কাজ, উইথড্র ও টিম অপশন পেতে আগে ৳৫০০ দিয়ে একাউন্ট ভেরিফাই করুন!");
+        return;
+    }
+
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+    document.getElementById(`tab-${tabName}`).style.display = 'block';
+    
+    // Active class highlight
+    const btns = document.querySelectorAll('.nav-item');
+    if(tabName==='home') btns[0].classList.add('active');
+    if(tabName==='verify') btns[1].classList.add('active');
+    if(tabName==='job') btns[2].classList.add('active');
+    if(tabName==='withdraw') btns[3].classList.add('active');
+    if(tabName==='team') btns[4].classList.add('active');
+}
+
+// ডেইলি জব সাবমিট করা
+async function submitJob() {
+    const answer = document.getElementById('job-ans').value;
+    if (!answer) return alert("উত্তর লিখুন!");
+
+    const res = await fetch('/api/submit-job', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: currentUser._id, answer })
+    });
+    const data = await res.json();
+    alert(data.message);
+    if (data.success) {
+        currentUser.balance = data.newBalance;
+        document.getElementById('u-balance').innerText = currentUser.balance;
+        document.getElementById('job-ans').value = '';
+        fetchExtraDetails();
+    }
+}
+
+// অ্যাকাউন্ট ভেরিফিকেশন রিকোয়েস্ট
+async function submitVerification() {
+    const bkashSender = document.getElementById('v-bkash').value;
+    const trxId = document.getElementById('v-trx').value;
+
+    if (!bkashSender || !trxId) return alert("বিকাশ নম্বর এবং TrxID প্রদান করুন!");
+
+    const res = await fetch('/api/verify-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: currentUser._id, bkashSender, trxId })
+    });
+    const data = await res.json();
+    alert(data.message);
+    if (data.success) {
+        document.getElementById('v-bkash').value = '';
+        document.getElementById('v-trx').value = '';
+    }
+}
+
+// উইথড্রয়াল রিকোয়েস্ট
+async function submitWithdraw() {
+    const paymentNumber = document.getElementById('w-number').value;
+    const amount = Number(document.getElementById('w-amount').value);
+
+    if (!paymentNumber || !amount) return alert("পেমেন্ট নম্বর এবং পরিমাণ লিখুন!");
+
+    const res = await fetch('/api/withdraw', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: currentUser._id, paymentNumber, amount })
+    });
+    const data = await res.json();
+    alert(data.message);
+    if (data.success) {
+        currentUser.balance = data.newBalance;
+        document.getElementById('u-balance').innerText = currentUser.balance;
+        document.getElementById('w-number').value = '';
+        document.getElementById('w-amount').value = '';
+        fetchExtraDetails();
+    }
+}
+
+// লগআউট
+function logout() {
+    currentUser = null;
+    localStorage.removeItem('user');
+    location.reload();
+}
+
+// Auto Login Check
+window.onload = () => {
+    const saved = localStorage.getItem('user');
+    if (saved) {
+        currentUser = JSON.parse(saved);
+        renderDashboard();
+    }
+}

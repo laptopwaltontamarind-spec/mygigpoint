@@ -1,0 +1,141 @@
+/* Global Reset & Typography */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: var(--tg-theme-bg-color, #f4f6f9);
+    color: var(--tg-theme-text-color, #333333);
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+#app {
+    width: 100%;
+    max-width: 480px;
+}
+
+/* Card Styling */
+.card {
+    background-color: var(--tg-theme-secondary-bg-color, #ffffff);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.card h4 {
+    margin-bottom: 8px;
+    color: var(--tg-theme-text-color, #1a1a1a);
+    font-size: 16px;
+}
+
+.card p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+/* User Header Banner */
+.user-header {
+    background: linear-gradient(135deg, #0088cc, #005580);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 15px rgba(0, 136, 204, 0.3);
+}
+
+.user-header h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.user-header p {
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: #e0f2fe;
+}
+
+.user-header b {
+    color: #ffffff;
+}
+
+/* Form Controls */
+input[type="text"],
+input[type="password"],
+input[type="number"] {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #ffffff;
+    color: #333;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input:focus {
+    border-color: #0088cc;
+}
+
+/* Buttons */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--tg-theme-button-color, #0088cc);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+button:active {
+    opacity: 0.9;
+    transform: scale(0.99);
+}
+
+.logout-btn {
+    background-color: #ef4444;
+    margin-top: 10px;
+}
+
+/* Form Switching Links */
+#auth-section {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+}
+
+#auth-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #0088cc;
+}
+
+#auth-section h3 {
+    margin-bottom: 15px;
+}
+
+#auth-section a {
+    color: #0088cc;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+#auth-section a:hover {
+    text-decoration: underline;
+}
