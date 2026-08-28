@@ -15,7 +15,7 @@ const SettingsSchema = new mongoose.Schema({
     verificationBkashNumber: { type: String, default: "013637839238" },
     dailyJobQuestion: { type: String, default: "45 + 55 = ?" },
     dailyJobAnswer: { type: String, default: "100" },
-    dailyJobReward: { type: Number, default: 40 },
+    dailyJobReward: { type: Number, default: 50 },
     supportTelegram: { type: String, default: "@AdminSupport" }
 });
 const Settings = mongoose.model('Settings', SettingsSchema);
