@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Earn Money Web Portal</title>
+    <title>Earn Money Web Portal</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-        body { background-color: #0b0f19; color: #f3f4f6; min-height: 100vh; padding-bottom: 40px; overflow-x: hidden; }
+        body { background-color: #0b0f19; color: #f3f4f6; min-height: 100vh; padding-bottom: 50px; overflow-x: hidden; }
         
-        /* Full Desktop/Browser Container */
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        /* Single Column Layout Container */
+        .container { max-width: 700px; margin: 0 auto; padding: 20px; }
 
-        /* Website Top Header Bar */
+        /* Top Header */
         .web-header {
             background: rgba(18, 25, 38, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px 30px;
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -27,47 +27,41 @@
         }
 
         .web-logo {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 900;
             background: linear-gradient(135deg, #ffd700, #ff8c00);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
-        /* Top Navigation Links for Desktop */
-        .web-nav { display: flex; gap: 15px; }
+        /* Top Navigation Bar */
+        .web-nav { display: flex; gap: 10px; }
         .web-nav-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: #d1d5db;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
-        .web-nav-btn:hover, .web-nav-btn.active {
+        .web-nav-btn.active {
             background: linear-gradient(135deg, #ffd700, #f59e0b);
             color: #000;
             border-color: #ffd700;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
         }
 
-        /* Responsive Grid Cards */
+        /* Card Elements (Vertical Stack / Ek Serial) */
         .card { 
             background: #161f30; 
-            padding: 24px; 
-            border-radius: 18px; 
+            padding: 22px; 
+            border-radius: 16px; 
             margin-bottom: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4); 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3); 
             border: 1px solid rgba(255, 255, 255, 0.08); 
+            width: 100%;
         }
 
         .btn { 
@@ -96,10 +90,6 @@
         }
         input:focus { border-color: #ffd700; box-shadow: 0 0 12px rgba(255, 215, 0, 0.3); }
 
-        /* Dashboard Responsive Grid System */
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-
         .table-custom { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; color: #d1d5db; }
         .table-custom th, .table-custom td { border: 1px solid rgba(255,255,255,0.08); padding: 12px; text-align: left; }
         .table-custom th { background: rgba(255, 255, 255, 0.05); color: #ffd700; }
@@ -121,37 +111,50 @@
             transition: opacity 0.5s ease-in-out;
         }
         #withdraw-entry-animation.active { opacity: 1; pointer-events: all; }
-        .globe-wrapper { position: relative; width: 130px; height: 130px; margin-bottom: 25px; }
-        .globe-icon { font-size: 90px; animation: spin-world 4s linear infinite; filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.6)); }
+        .globe-wrapper { position: relative; width: 120px; height: 120px; margin-bottom: 20px; }
+        .globe-icon { font-size: 80px; animation: spin-world 4s linear infinite; filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.6)); }
         @keyframes spin-world { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .globe-ring { position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px; border: 2px dashed #ffd700; border-radius: 50%; animation: spin-ring 6s linear infinite reverse; }
         @keyframes spin-ring { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .anim-text-funny { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #ffd700, #ff8c00, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.5; margin-bottom: 10px; }
+        .anim-text-funny { font-size: 20px; font-weight: 800; background: linear-gradient(135deg, #ffd700, #ff8c00, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.5; margin-bottom: 10px; }
 
-        /* Profile Box */
-        .avatar-container { width: 80px; height: 80px; position: relative; cursor: pointer; margin: 0 auto 15px; }
-        .avatar-box { width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(45deg, #ffd700, #ffa500); display: flex; align-items: center; justify-content: center; font-size: 35px; overflow: hidden; border: 2px solid #ffd700; }
+        /* Profile Photo Styles */
+        .avatar-container { width: 90px; height: 90px; position: relative; cursor: pointer; margin: 0 auto 15px; }
+        .avatar-box { width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(45deg, #ffd700, #ffa500); display: flex; align-items: center; justify-content: center; font-size: 40px; overflow: hidden; border: 3px solid #ffd700; }
         .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar-upload-icon { position: absolute; bottom: 0; right: 0; background: #ffd700; color: #000; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; }
 
-        /* Mobile Responsive Adjustments */
-        @media (max-width: 768px) {
-            .web-header { flex-direction: column; gap: 15px; text-align: center; }
-            .web-nav { width: 100%; justify-content: center; }
-            .web-nav-btn { font-size: 12px; padding: 8px 12px; }
+        /* List Action Item */
+        .list-action-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 16px;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
+        .list-action-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #ffd700;
+        }
+        .list-action-card .icon { font-size: 28px; }
+        .list-action-card .text h4 { font-size: 16px; color: #fff; }
+        .list-action-card .text p { font-size: 12px; color: #9ca3af; margin-top: 2px; }
     </style>
 </head>
 <body>
 
-<!-- WEBSITE TOP HEADER -->
+<!-- TOP WEBSITE HEADER -->
 <div class="web-header">
-    <div class="web-logo">
-        💎 EARN MONEY PORTAL
-    </div>
+    <div class="web-logo">💎 EARN PORTAL</div>
     <div class="web-nav" id="app-nav" style="display:none;">
         <button class="web-nav-btn active" id="nav-home" onclick="switchTab('home')">🏠 হোম</button>
         <button class="web-nav-btn" id="nav-job" onclick="switchTab('job')">💼 কাজ</button>
-        <button class="web-nav-btn" id="nav-profile" onclick="switchTab('profile')">👤 প্রোফাইল হাব</button>
+        <button class="web-nav-btn" id="nav-profile" onclick="switchTab('profile')">👤 প্রোফাইল</button>
     </div>
 </div>
 
@@ -172,7 +175,7 @@
 <div class="container">
 
     <!-- Auth Section (Login / Register) -->
-    <div id="auth-section" style="max-width: 450px; margin: 40px auto;">
+    <div id="auth-section" style="max-width: 450px; margin: 30px auto;">
         <div id="login-form" class="card">
             <h2 style="color:#fff; margin-bottom:15px; text-align:center;">লগইন করুন</h2>
             <label>মোবাইল নম্বর</label>
@@ -198,113 +201,149 @@
         </div>
     </div>
 
-    <!-- Main Dashboard Section -->
+    <!-- Main Vertical Dashboard Section -->
     <div id="dashboard-section" style="display:none;">
         
+        <!-- Warning Banner -->
         <div id="unverified-warning" class="card" style="background:rgba(245, 158, 11, 0.15); border:1px solid #f59e0b; color:#fbbf24; display:none;">
             ⚠️ <b>একাউন্ট আনভেরিফাইড!</b> সকল অপশন ব্যবহার করতে ৳৫০০ দিয়ে একাউন্ট ভেরিফাই করুন।
         </div>
 
-        <!-- TAB 1: HOME (WEBSITE LAYOUT) -->
+        <!-- TAB 1: HOME (একটির নিচে আরেকটি) -->
         <div id="tab-home" class="tab-content">
-            <div class="grid-2">
-                <div class="card" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
-                    <h3 style="color:#9ca3af; font-size:14px; text-transform:uppercase;">বর্তমান ব্যালেন্স</h3>
-                    <p style="font-size:36px; font-weight:900; color:#ffd700; margin-top:10px;">৳<span id="u-balance">0</span></p>
-                </div>
-                <div class="card" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
-                    <h3 style="color:#9ca3af; font-size:14px; text-transform:uppercase;">মোট ইনকাম</h3>
-                    <p style="font-size:36px; font-weight:900; color:#38bdf8; margin-top:10px;">৳<span id="u-total-earned">0</span></p>
-                </div>
+            <!-- 1. Balance Card -->
+            <div class="card" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
+                <h3 style="color:#9ca3af; font-size:13px; text-transform:uppercase;">বর্তমান ব্যালেন্স</h3>
+                <p style="font-size:36px; font-weight:900; color:#ffd700; margin-top:8px;">৳<span id="u-balance">0</span></p>
             </div>
 
+            <!-- 2. Total Earned Card -->
+            <div class="card" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
+                <h3 style="color:#9ca3af; font-size:13px; text-transform:uppercase;">মোট ইনকাম</h3>
+                <p style="font-size:36px; font-weight:900; color:#38bdf8; margin-top:8px;">৳<span id="u-total-earned">0</span></p>
+            </div>
+
+            <!-- 3. Referral Card -->
             <div class="card" style="text-align:center; background: linear-gradient(135deg, #111827, #1f2937);">
-                <h3 style="color:#fff;">🎁 আপনার রেফারেল লিংক ও কোড</h3>
-                <div style="background:rgba(255,255,255,0.05); border:1px dashed #ffd700; padding:15px; border-radius:12px; margin:15px auto; max-width:400px;">
-                    <p id="u-refcode" style="font-size:24px; font-weight:800; color:#ffd700; letter-spacing:2px;">---</p>
+                <h3 style="color:#fff;">🎁 আপনার রেফারেল কোড</h3>
+                <div style="background:rgba(255,255,255,0.05); border:1px dashed #ffd700; padding:12px; border-radius:10px; margin:12px 0;">
+                    <p id="u-refcode" style="font-size:22px; font-weight:800; color:#ffd700; letter-spacing:2px;">---</p>
                 </div>
-                <p style="color:#9ca3af;">প্রতিটি সফল ভেরিফাইড রেফারে পাবেন <b style="color:#ffd700;">৳৪০</b> বোনাস!</p>
+                <p style="color:#9ca3af; font-size:13px;">প্রতিটি ভেরিফাইড রেফারে পাবেন <b style="color:#ffd700;">৳৪০</b> বোনাস!</p>
             </div>
         </div>
 
         <!-- TAB 2: DAILY JOB -->
         <div id="tab-job" class="tab-content" style="display:none;">
-            <div class="card" style="max-width:600px; margin:0 auto; background: linear-gradient(145deg, #0f172a, #1e1b4b); border:1px solid rgba(255,215,0,0.3);">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <h2 style="color:#fff;">⚡ দৈনিক স্পেশাল টাস্ক</h2>
-                    <span style="background:rgba(34,197,94,0.2); color:#4ade80; padding:5px 12px; border-radius:20px; font-size:12px; font-weight:bold;">সক্রিয়</span>
+            <div class="card" style="background: linear-gradient(145deg, #0f172a, #1e1b4b); border:1px solid rgba(255,215,0,0.3);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h3 style="color:#fff;">⚡ দৈনিক স্পেশাল টাস্ক</h3>
+                    <span style="background:rgba(34,197,94,0.2); color:#4ade80; padding:4px 10px; border-radius:15px; font-size:12px; font-weight:bold;">সক্রিয়</span>
                 </div>
-                <div style="background:rgba(255,215,0,0.1); border:1px solid rgba(255,215,0,0.3); padding:15px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <div><small style="color:#9ca3af;">টাস্ক বোনাস</small><p style="font-size:24px; font-weight:900; color:#ffd700;">৳৫০.০০</p></div>
-                    <span style="font-size:32px;">💎</span>
+                <div style="background:rgba(255,215,0,0.1); border:1px solid rgba(255,215,0,0.3); padding:12px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <div><small style="color:#9ca3af;">টাস্ক রিওয়ার্ড</small><p style="font-size:22px; font-weight:900; color:#ffd700;">৳৫০.০০</p></div>
+                    <span style="font-size:30px;">💎</span>
                 </div>
-                <div style="text-align:center; background:rgba(255,255,255,0.03); padding:20px; border-radius:12px; margin-bottom:20px;">
+                <div style="text-align:center; background:rgba(255,255,255,0.03); padding:15px; border-radius:10px; margin-bottom:15px;">
                     <p style="color:#9ca3af; font-size:12px;">গাণিতিক প্রশ্ন</p>
-                    <p id="job-q" style="font-size:24px; font-weight:800; color:#38bdf8;">প্রশ্ন লোড হচ্ছে...</p>
+                    <p id="job-q" style="font-size:22px; font-weight:800; color:#38bdf8;">প্রশ্ন লোড হচ্ছে...</p>
                 </div>
-                <input type="text" id="job-ans" placeholder="সঠিক উত্তর লিখুন..." style="text-align:center; font-size:18px; font-weight:bold;">
+                <input type="text" id="job-ans" placeholder="সঠিক উত্তর লিখুন..." style="text-align:center; font-size:16px; font-weight:bold;">
                 <button class="btn" style="background:linear-gradient(135deg, #ffd700, #f59e0b); color:#000; font-weight:900;" onclick="submitJob()">✨ উত্তর জমা দিয়ে ৳৫০ নিন</button>
             </div>
         </div>
 
-        <!-- TAB 3: PROFILE HUB (FULL WEBSITE DASHBOARD) -->
+        <!-- TAB 3: PROFILE HUB (পর পর লিস্ট সিগ্যালের অপশনগুলো) -->
         <div id="tab-profile" class="tab-content" style="display:none;">
-            <div class="grid-3">
-                
-                <!-- Profile Card -->
-                <div class="card" style="text-align:center;">
-                    <div class="avatar-container" onclick="document.getElementById('profile-photo-input').click()">
-                        <div class="avatar-box" id="avatar-box-display">
-                            <span id="u-avatar">👤</span>
-                        </div>
+            <!-- User Profile Box -->
+            <div class="card" style="text-align:center;">
+                <div class="avatar-container" onclick="document.getElementById('profile-photo-input').click()">
+                    <div class="avatar-box" id="avatar-box-display">
+                        <span id="u-avatar">👤</span>
                     </div>
-                    <input type="file" id="profile-photo-input" accept="image/*" style="display:none;" onchange="uploadProfilePhoto(event)">
-                    <h3 id="u-name" style="color:#fff;">লোডিং...</h3>
-                    <p id="u-status" style="color:#28a745; font-size:14px; margin-top:5px;">...</p>
-                    <button class="btn" style="margin-top:20px; background:linear-gradient(135deg, #ff416c, #ff4b2b);" onclick="logout()">🚪 লগআউট</button>
+                    <div class="avatar-upload-icon">📷</div>
+                </div>
+                <input type="file" id="profile-photo-input" accept="image/*" style="display:none;" onchange="uploadProfilePhoto(event)">
+                <h3 id="u-name" style="color:#fff; font-size:20px;">লোডিং...</h3>
+                <p id="u-status" style="color:#28a745; font-size:13px; margin-top:4px;">...</p>
+            </div>
+
+            <!-- Profile Actions Serial List -->
+            <div class="card">
+                <h4 style="color:#9ca3af; margin-bottom:12px; font-size:13px; text-transform:uppercase;">মেনু তালিকা</h4>
+
+                <!-- 1. Withdraw Button -->
+                <div class="list-action-card" onclick="triggerWithdrawTab()">
+                    <div class="icon">💸</div>
+                    <div class="text">
+                        <h4>উইথড্র করুন</h4>
+                        <p>ইনস্ট্যান্ট বিকাশ বা নগদে টাকা ক্যাশআউট করুন</p>
+                    </div>
                 </div>
 
-                <!-- Navigation Cards -->
-                <div class="card" style="cursor:pointer;" onclick="triggerWithdrawTab()">
-                    <div style="font-size:40px; margin-bottom:10px;">💸</div>
-                    <h3 style="color:#fff;">উইথড্র করুন</h3>
-                    <p style="color:#9ca3af; font-size:13px; margin-top:5px;">ইনস্ট্যান্ট বিকাশ/নগদে টাকা বের করুন</p>
+                <!-- 2. Team & History Button -->
+                <div class="list-action-card" onclick="openSubPage('team-page')">
+                    <div class="icon">👥</div>
+                    <div class="text">
+                        <h4>টিম ও হিস্ট্রি</h4>
+                        <p>আপনার রেফারাল তালিকা এবং ট্রানজেকশন হিস্ট্রি</p>
+                    </div>
                 </div>
 
-                <div class="card" style="cursor:pointer;" onclick="openSubPage('team-page')">
-                    <div style="font-size:40px; margin-bottom:10px;">👥</div>
-                    <h3 style="color:#fff;">টিম ও হিস্ট্রি</h3>
-                    <p style="color:#9ca3af; font-size:13px; margin-top:5px;">রেফারাল তালিকা ও উইথড্র হিস্ট্রি দেখুন</p>
+                <!-- 3. Verification Button -->
+                <div class="list-action-card" onclick="openSubPage('verify-page')">
+                    <div class="icon">✅</div>
+                    <div class="text">
+                        <h4>একাউন্ট ভেরিফাই</h4>
+                        <p>৳৫০০ বিকাশ পে করে একাউন্ট ভেরিফাই করুন</p>
+                    </div>
                 </div>
 
+                <!-- Logout Button -->
+                <button class="btn" style="margin-top:10px; background:linear-gradient(135deg, #ff416c, #ff4b2b);" onclick="logout()">🚪 একাউন্ট লগআউট</button>
             </div>
 
             <!-- SUB PAGE: TEAM & HISTORY -->
             <div id="team-page" style="display:none;">
-                <button class="btn" style="margin-bottom:15px; max-width:200px; background:#374151;" onclick="closeSubPages()">⬅️ ফিরে যান</button>
-                <div class="grid-2">
-                    <div class="card">
-                        <h3 style="color:#fff; margin-bottom:10px;">আমার টিম (রেফারাল তালিকা)</h3>
-                        <p style="font-size:13px; color:#9ca3af;">মোট রেফারাল: <b id="team-count" style="color:#ffd700;">0</b> জন</p>
-                        <table class="table-custom">
-                            <thead><tr><th>নাম</th><th>মোবাইল</th><th>স্ট্যাটাস</th></tr></thead>
-                            <tbody id="team-list"></tbody>
-                        </table>
-                    </div>
-                    <div class="card">
-                        <h3 style="color:#fff; margin-bottom:10px;">উইথড্র হিস্ট্রি</h3>
-                        <table class="table-custom">
-                            <thead><tr><th>তারিখ</th><th>পরিমাণ</th><th>স্ট্যাটাস</th></tr></thead>
-                            <tbody id="withdraw-history"></tbody>
-                        </table>
-                    </div>
+                <button class="btn" style="margin-bottom:15px; background:#374151;" onclick="closeSubPages()">⬅️ প্রোফাইলে ফিরে যান</button>
+                <div class="card">
+                    <h3 style="color:#fff; margin-bottom:10px;">আমার টিম (রেফারাল তালিকা)</h3>
+                    <p style="font-size:13px; color:#9ca3af;">মোট রেফারাল: <b id="team-count" style="color:#ffd700;">0</b> জন</p>
+                    <table class="table-custom">
+                        <thead><tr><th>নাম</th><th>মোবাইল</th><th>স্ট্যাটাস</th></tr></thead>
+                        <tbody id="team-list"></tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h3 style="color:#fff; margin-bottom:10px;">উইথড্র হিস্ট্রি</h3>
+                    <table class="table-custom">
+                        <thead><tr><th>তারিখ</th><th>পরিমাণ</th><th>স্ট্যাটাস</th></tr></thead>
+                        <tbody id="withdraw-history"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SUB PAGE: VERIFY -->
+            <div id="verify-page" style="display:none;">
+                <button class="btn" style="margin-bottom:15px; background:#374151;" onclick="closeSubPages()">⬅️ প্রোফাইলে ফিরে যান</button>
+                <div class="card">
+                    <h3 style="color:#fff; margin-bottom:10px;">একাউন্ট ভেরিফিকেশন (৩০ দিন)</h3>
+                    <p style="font-size:13px; color:#9ca3af; margin: 8px 0;">নিচের বিকাশ নম্বরে ৳৫০০ Send Money করুন এবং TrxID নিচে লিখুন:</p>
+                    <p style="background:rgba(255,255,255,0.08); padding:12px; border-radius:8px; font-weight:bold; text-align:center; color:#ffd700; font-size:18px;" id="verify-bkash-num">013637839238</p>
+                    
+                    <label style="margin-top:12px; display:block;">আপনার বিকাশ নম্বর</label>
+                    <input type="text" id="v-bkash" placeholder="017xxxxxxxx">
+                    <label>TrxID (ট্রানজেকশন আইডি)</label>
+                    <input type="text" id="v-trx" placeholder="9X87YYZZ">
+                    <button class="btn" onclick="submitVerification()">ভেরিফিকেশন সাবমিট করুন</button>
                 </div>
             </div>
 
             <!-- SUB PAGE: WITHDRAW -->
             <div id="withdraw-page" style="display:none;">
-                <button class="btn" style="margin-bottom:15px; max-width:200px; background:#374151;" onclick="closeSubPages()">⬅️ ফিরে যান</button>
-                <div class="card" style="max-width:500px; margin:0 auto; background: linear-gradient(135deg, #111827, #31103f); border:1px solid rgba(236,72,153,0.4);">
+                <button class="btn" style="margin-bottom:15px; background:#374151;" onclick="closeSubPages()">⬅️ প্রোফাইলে ফিরে যান</button>
+                <div class="card" style="background: linear-gradient(135deg, #111827, #31103f); border:1px solid rgba(236,72,153,0.4);">
                     <h3 style="color:#ec4899; margin-bottom:15px;">💸 ইনস্ট্যান্ট উইথড্র গেটওয়ে</h3>
                     <label>বিকাশ/নগদ পার্সোনাল নম্বর</label>
                     <input type="text" id="w-number" placeholder="017xxxxxxxx">
@@ -334,12 +373,14 @@
 
     function openSubPage(pageId) {
         document.getElementById('team-page').style.display = 'none';
+        document.getElementById('verify-page').style.display = 'none';
         document.getElementById('withdraw-page').style.display = 'none';
         document.getElementById(pageId).style.display = 'block';
     }
 
     function closeSubPages() {
         document.getElementById('team-page').style.display = 'none';
+        document.getElementById('verify-page').style.display = 'none';
         document.getElementById('withdraw-page').style.display = 'none';
     }
 
@@ -354,17 +395,13 @@
         }
     }
 
-    // Active Navigation Highlight
-    const originalSwitchTab = window.switchTab;
     function switchTab(tabName) {
         document.querySelectorAll('.web-nav-btn').forEach(btn => btn.classList.remove('active'));
         if(document.getElementById('nav-' + tabName)) {
             document.getElementById('nav-' + tabName).classList.add('active');
         }
-        document.querySelectorAll('.tab-content').forEach(t => t.style.style ? t.style.display = 'none' : null);
         closeSubPages();
         
-        // Hide/Show tabs
         document.getElementById('tab-home').style.display = tabName === 'home' ? 'block' : 'none';
         document.getElementById('tab-job').style.display = tabName === 'job' ? 'block' : 'none';
         document.getElementById('tab-profile').style.display = tabName === 'profile' ? 'block' : 'none';
