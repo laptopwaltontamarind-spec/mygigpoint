@@ -77,7 +77,7 @@ async function register() {
             showMessage('register-error', data.message || 'রেজিস্ট্রেশন ব্যর্থ হয়েছে!');
         }
     } catch (err) {
-        showMessage('register-error', 'সার্ভারে সমস্যা হয়েছে! পরবর্তীতে চেষ্টা করুন।');
+        showMessage('register-error', 'সার্ভারে সমস্যা হয়েছে! পরবর্তীতে চেষ্টা করুন।');
     }
 }
 
@@ -128,7 +128,7 @@ async function renderDashboard() {
     const today = new Date();
     const expireDate = currentUser.verifiedExpireDate ? new Date(currentUser.verifiedExpireDate) : null;
     
-    // isVerified = true হলেই ভেরিফাইড দেখাবে (যদি মেয়াদ থাকে তাহলেও ভ্যালিড)
+    // isVerified = true হলেই ভেরিফাইড দেখাবে
     const isStillValid = currentUser.isVerified && (!expireDate || expireDate > today);
 
     if (isStillValid) {
@@ -146,7 +146,7 @@ async function renderDashboard() {
             if (expireElem) expireElem.innerText = `${diffDays} দিন বাকি (মেয়াদ: ${formattedDate})`;
         }
 
-        // ভেরিফাই ট্যাবের ভেতর ফর্ম লুকিয়ে সাকসেস মেসেজ শো করা
+        // ভেরিফাই ট্যাবের ভেতর ফর্ম লুকিয়ে সাকসেস মেসেজ শো করা
         const verifyTab = document.getElementById('tab-verify');
         if (verifyTab) {
             verifyTab.innerHTML = `
@@ -180,7 +180,7 @@ async function fetchExtraDetails() {
         const res = await fetch('/api/admin/data');
         const data = await res.json();
 
-        // সার্ভার থেকে ইউজারের লেটেস্ট তথ্য দিয়ে currentUser আপডেট
+        // সার্ভার থেকে ইউজারের লেটেস্ট তথ্য দিয়ে currentUser আপডেট
         if (data.users) {
             const updatedMe = data.users.find(u => u._id === currentUser._id);
             if (updatedMe) {
@@ -227,34 +227,50 @@ async function fetchExtraDetails() {
     } catch (e) { console.error("History Error:", e); }
 }
 
-// ট্যাব সুইচিং ফাংশন
+// আপডেট করা ট্যাব সুইচিং ফাংশন (৬টি ট্যাবের নিখুঁত সিঙ্ক)
 function switchTab(tabName) {
     clearMessages();
     const today = new Date();
     const expireDate = currentUser?.verifiedExpireDate ? new Date(currentUser.verifiedExpireDate) : null;
     const isStillValid = currentUser?.isVerified && (!expireDate || expireDate > today);
 
+    // আনভেরিফাইড ইউজারদের জন্য সিকিউরিটি চেক
     if (!isStillValid && tabName !== 'verify' && tabName !== 'home') {
         showMessage('verify-error', 'কাজ, উইথড্র ও টিম অপশন পেতে আগে ৳৫০০ দিয়ে একাউন্ট ভেরিফাই করুন!');
         document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
         document.getElementById('tab-verify').style.display = 'block';
+        highlightNav('verify');
         return;
     }
 
+    // সকল ট্যাব হাইড করা
     document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
 
+    // নির্দিষ্ট ট্যাব ওপেন করা
     const activeTab = document.getElementById(`tab-${tabName}`);
     if (activeTab) activeTab.style.display = 'block';
     
-    // Active class highlight
+    // নেভিগেশন বাটনে active ক্লাস যুক্ত করার সঠিক লজিক
+    highlightNav(tabName);
+}
+
+// নেভিগেশন বাটন হাইলাইট করার হেলপার ফাংশন
+function highlightNav(tabName) {
     const btns = document.querySelectorAll('.nav-item');
-    if (btns.length > 0) {
-        if(tabName==='home' && btns[0]) btns[0].classList.add('active');
-        if(tabName==='verify' && btns[1]) btns[1].classList.add('active');
-        if(tabName==='job' && btns[2]) btns[2].classList.add('active');
-        if(tabName==='withdraw' && btns[3]) btns[3].classList.add('active');
-        if(tabName==='team' && btns[4]) btns[4].classList.add('active');
+    btns.forEach(btn => btn.classList.remove('active'));
+
+    const tabMapping = {
+        'home': 0,
+        'verify': 1,
+        'job': 2,
+        'withdraw': 3,
+        'history': 4,
+        'team': 5
+    };
+
+    const index = tabMapping[tabName];
+    if (index !== undefined && btns[index]) {
+        btns[index].classList.add('active');
     }
 }
 
@@ -276,7 +292,7 @@ async function submitJob() {
             currentUser.balance = data.newBalance;
             document.getElementById('u-balance').innerText = currentUser.balance;
             document.getElementById('job-ans').value = '';
-            showMessage('job-error', data.message || 'অভিনন্দন! আপনার উত্তর সঠিক হয়েছে।', false);
+            showMessage('job-error', data.message || 'অভিনন্দন! আপনার উত্তর সঠিক হয়েছে।', false);
             fetchExtraDetails();
         } else {
             showMessage('job-error', data.message || 'ভুল উত্তর! আবার চেষ্টা করুন।');
@@ -309,7 +325,7 @@ async function submitVerification() {
             document.getElementById('v-trx').value = '';
             showMessage('verify-error', data.message || 'ভেরিফিকেশন রিকোয়েস্ট সফলভাবে জমা দেওয়া হয়েছে!', false);
         } else {
-            showMessage('verify-error', data.message || 'ভেরিফিকেশন সাবমিট করতে সমস্যা হয়েছে!');
+            showMessage('verify-error', data.message || 'ভেরিফিকেশন সাবমিট করতে সমস্যা হয়েছে!');
         }
     } catch (err) {
         showMessage('verify-error', 'নেটওয়ার্ক সমস্যা! পুনরায় চেষ্টা করুন।');
