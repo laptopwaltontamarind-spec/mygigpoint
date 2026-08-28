@@ -81,25 +81,51 @@ async function renderDashboard() {
     const statusElem = document.getElementById('u-status');
     const warningBox = document.getElementById('unverified-warning');
     const timerBox = document.getElementById('expire-timer-box');
+    
+    // ভেরিফিকেশন ফর্ম এবং অ্যাক্টিভ স্ট্যাটাস বক্সের HTML Elements (যদি HTML এ থাকে)
+    const verifyFormSection = document.getElementById('verify-form-section') || document.querySelector('#tab-verify form') || document.getElementById('tab-verify');
 
-    // একাউন্ট ভেরিফাইড কি না চেক করা
-    if (currentUser.isVerified) {
-        statusElem.innerText = "ভেরিফাইড ✅ (৩০ দিন মেয়াদী)";
+    // তারিখ হিসাবের লজিক
+    const today = new Date();
+    const expireDate = currentUser.verifiedExpireDate ? new Date(currentUser.verifiedExpireDate) : null;
+    const isStillValid = currentUser.isVerified && expireDate && expireDate > today;
+
+    if (isStillValid) {
+        // ১. একাউন্ট ভেরিফাইড হলে
+        const formattedDate = expireDate.toLocaleDateString('en-GB'); // DD/MM/YYYY ফরম্যাট
+        const diffDays = Math.ceil((expireDate - today) / (1000 * 60 * 60 * 24));
+
+        statusElem.innerText = "ভেরিফাইড ✅";
         statusElem.style.color = "green";
         warningBox.style.display = "none";
         
-        // মেয়াদের দিন হিসাব করা
-        if(currentUser.verifiedExpireDate) {
+        if (timerBox) {
             timerBox.style.display = "block";
-            const diffDays = Math.ceil((new Date(currentUser.verifiedExpireDate) - new Date()) / (1000 * 60 * 60 * 24));
-            document.getElementById('u-expire').innerText = `${diffDays > 0 ? diffDays : 0} দিন বাকি`;
+            document.getElementById('u-expire').innerText = `${diffDays} দিন বাকি (মেয়াদ: ${formattedDate})`;
+        }
+
+        // ভেরিফাই ট্যাবের ভেতর ফর্ম লুকিয়ে মেয়াদ শেষ হওয়ার মেসেজ শো করা
+        const verifyTab = document.getElementById('tab-verify');
+        if (verifyTab) {
+            verifyTab.innerHTML = `
+                <div style="background: #e8f5e9; border: 1px solid #4caf50; padding: 20px; border-radius: 10px; color: #2e7d32; text-align: center; margin-top: 20px;">
+                    <h3>✅ আপনার অ্যাকাউন্ট ভেরিফাইড!</h3>
+                    <p style="margin-top: 10px; font-size: 16px;">আপনার অ্যাকাউন্টের ভেরিফিকেশন মেয়াদ সক্রিয় আছে।</p>
+                    <p style="margin-top: 5px; font-weight: bold; font-size: 18px; color: #1b5e20;">
+                        মেয়াদ শেষ হওয়ার তারিখ: ${formattedDate}
+                    </p>
+                    <p style="margin-top: 5px; font-size: 14px; color: #555;">(বাকি আছে: ${diffDays} দিন)</p>
+                </div>
+            `;
         }
     } else {
+        // ২. আনভেরিফাইড বা মেয়াদ শেষ হয়ে গেলে
         statusElem.innerText = "আনভেরিফাইড ❌";
         statusElem.style.color = "red";
         warningBox.style.display = "block";
-        timerBox.style.display = "none";
-        switchTab('verify'); // আনভেরিফাইড হলে সরাসরী ভেরিফাই ট্যাবে নিয়ে যাবে
+        if (timerBox) timerBox.style.display = "none";
+        
+        switchTab('verify'); // সরাসরি ভেরিফাই ট্যাবে নিয়ে যাবে
     }
 
     // টিম ও হিস্ট্রি ডাটা লোড
@@ -143,8 +169,12 @@ async function fetchExtraDetails() {
 
 // ট্যাব সুইচিং ফাংশন
 function switchTab(tabName) {
-    if (!currentUser.isVerified && tabName !== 'verify' && tabName !== 'home') {
-        alert("কাজ, উইথড্র ও টিম অপশন পেতে আগে ৳৫০০ দিয়ে একাউন্ট ভেরিফাই করুন!");
+    const today = new Date();
+    const expireDate = currentUser?.verifiedExpireDate ? new Date(currentUser.verifiedExpireDate) : null;
+    const isStillValid = currentUser?.isVerified && expireDate && expireDate > today;
+
+    if (!isStillValid && tabName !== 'verify' && tabName !== 'home') {
+        alert("কাজ, উইথড্র ও টিম অপশন পেতে আগে ৳৫০০ দিয়ে একাউন্ট ভেরিফাই করুন!");
         return;
     }
 
