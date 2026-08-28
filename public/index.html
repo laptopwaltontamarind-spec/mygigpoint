@@ -14,6 +14,20 @@
         .btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #0088cc, #005580); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 15px; letter-spacing: 0.5px; transition: all 0.3s ease; }
         .btn-danger { background: linear-gradient(135deg, #ff416c, #ff4b2b); }
         
+        /* লাল ওয়ার্নিং অ্যালার্ট বক্স স্টাইল */
+        .error-msg-box {
+            display: none;
+            color: #ff4d4d;
+            background: rgba(255, 77, 77, 0.12);
+            border: 1px solid #ff4d4d;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 14px;
+            text-align: center;
+            font-weight: 600;
+        }
+
         /* ইনপুট ফিল্ড ও ক্লিক ল্যাগ ফিক্স */
         input, button, select, textarea {
             -webkit-user-select: text !important;
@@ -320,8 +334,13 @@
 
     <!-- Auth Section (Login / Register) -->
     <div id="auth-section">
+        <!-- Login Form -->
         <div id="login-form" class="card">
             <h2 style="color:#fff; margin-bottom:15px;">লগইন করুন</h2>
+            
+            <!-- লাল ওয়ার্নিং অ্যালার্ট বক্স (লগইন) -->
+            <div id="login-error" class="error-msg-box"></div>
+
             <label>মোবাইল নম্বর</label>
             <input type="text" id="login-mobile" placeholder="017xxxxxxxx">
             <label>পাসওয়ার্ড</label>
@@ -330,8 +349,13 @@
             <p style="margin-top:15px; text-align:center; font-size:14px; color:#9ca3af;">একাউন্ট নেই? <a href="#" onclick="showRegister()" style="color:#38bdf8;">রেজিস্ট্রেশন করুন</a></p>
         </div>
 
+        <!-- Registration Form -->
         <div id="register-form" class="card" style="display:none;">
             <h2 style="color:#fff; margin-bottom:15px;">রেজিস্ট্রেশন করুন</h2>
+
+            <!-- লাল ওয়ার্নিং অ্যালার্ট বক্স (রেজিস্ট্রেশন) -->
+            <div id="register-error" class="error-msg-box"></div>
+
             <label>আপনার নাম</label>
             <input type="text" id="reg-name" placeholder="আপনার নাম">
             <label>মোবাইল নম্বর</label>
@@ -412,6 +436,10 @@
         <div id="tab-verify" class="tab-content" style="display:none;">
             <div class="card">
                 <h3 style="color:#fff; margin-bottom:10px;">একাউন্ট ভেরিফিকেশন (৩০ দিন)</h3>
+                
+                <!-- লাল ওয়ার্নিং অ্যালার্ট (ভেরিফিকেশন) -->
+                <div id="verify-error" class="error-msg-box"></div>
+
                 <p style="font-size:13px; color:#9ca3af; margin: 8px 0;">নিচের বিকাশ নম্বরে ৳৫০০ Send Money করুন এবং TrxID নিচে লিখুন:</p>
                 <p style="background:rgba(255,255,255,0.08); padding:12px; border-radius:8px; font-weight:bold; text-align:center; color:#ffd700; font-size:18px;" id="verify-bkash-num">013637839238</p>
                 
@@ -432,19 +460,22 @@
                         <span>⚡</span> দৈনিক স্পেশাল টাস্ক
                     </div>
                     <div class="job-live-indicator">
-                        <span class="job-live-dot"></span> সক্রিয় কাজ
+                        <span class="job-live-dot"></span> সক্রিয় কাজ
                     </div>
                 </div>
 
                 <div class="job-reward-banner">
                     <div class="reward-info-left">
-                        <small>টাস্ক রিওয়ার্ড বোনাস</small>
+                        <small>টাস্ক রিওয়ার্ড বোনাস</small>
                         <span>৳৫০.০০</span>
                     </div>
                     <div class="reward-icon-chip">
                         💎
                     </div>
                 </div>
+
+                <!-- লাল ওয়ার্নিং অ্যালার্ট (জব) -->
+                <div id="job-error" class="error-msg-box"></div>
 
                 <div class="question-box-wrapper">
                     <label>আজকের গাণিতিক চ্যালেঞ্জ</label>
@@ -456,7 +487,7 @@
                 </div>
 
                 <button class="btn btn-luxury-submit" onclick="submitJob()">
-                    ✨ উত্তর জমা দিয়ে ৳৫০ নিন
+                    ✨ উত্তর জমা দিয়ে ৳৫০ নিন
                 </button>
 
             </div>
@@ -466,6 +497,10 @@
         <div id="tab-withdraw" class="tab-content" style="display:none;">
             <div class="card">
                 <h3 style="color:#fff; margin-bottom:12px;">টাকা তুলুন (Withdraw)</h3>
+
+                <!-- লাল ওয়ার্নিং অ্যালার্ট (উইথড্র) -->
+                <div id="withdraw-error" class="error-msg-box"></div>
+
                 <label>বিকাশ/নগদ নম্বর</label>
                 <input type="text" id="w-number" placeholder="017xxxxxxxx">
                 <label>পরিমাণ (সর্বনিম্ন ৳৫০)</label>
