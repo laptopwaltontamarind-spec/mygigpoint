@@ -2,7 +2,6 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <!-- টেলিগ্রাম ও মোবাইল কিবোর্ড রেসপন্সিভ ভিউপোর্ট -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Earn Money WebApp</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -14,7 +13,6 @@
         .btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #0088cc, #005580); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 15px; letter-spacing: 0.5px; transition: all 0.3s ease; }
         .btn-danger { background: linear-gradient(135deg, #ff416c, #ff4b2b); }
         
-        /* লাল ওয়ার্নিং অ্যালার্ট বক্স স্টাইল */
         .error-msg-box {
             display: none;
             color: #ff4d4d;
@@ -28,7 +26,6 @@
             font-weight: 600;
         }
 
-        /* ইনপুট ফিল্ড ও ক্লিক ল্যাগ ফিক্স */
         input, button, select, textarea {
             -webkit-user-select: text !important;
             user-select: text !important;
@@ -39,9 +36,8 @@
         input:focus { border-color: #ffd700; box-shadow: 0 0 12px rgba(255, 215, 0, 0.3); background: rgba(255, 255, 255, 0.08); }
         label { font-size: 13px; color: #9ca3af; font-weight: 600; }
 
-        /* Bottom Navigation Bar */
-        .navbar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 25, 38, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); max-width: 480px; margin: 0 auto; z-index: 999; }
-        .nav-item { border: none; background: none; font-size: 12px; color: #9ca3af; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .navbar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 25, 38, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 10px 4px; border-top: 1px solid rgba(255, 255, 255, 0.1); max-width: 480px; margin: 0 auto; z-index: 999; }
+        .nav-item { border: none; background: none; font-size: 11px; color: #9ca3af; font-weight: bold; cursor: pointer; transition: 0.3s; padding: 4px; }
         .nav-item.active { color: #ffd700; text-shadow: 0 0 8px rgba(255, 215, 0, 0.4); }
 
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -54,7 +50,6 @@
         .bg-approved { background: #28a745; color: #fff; }
         .bg-rejected { background: #dc3545; color: #fff; }
 
-        /* Luxury Profile Styling */
         .luxury-profile-card {
             background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             color: #ffffff;
@@ -156,9 +151,6 @@
             margin-top: 15px;
         }
 
-        /* ------------------------------------------------------------- */
-        /* ULTRA LUXURY 50,000$ DAILY JOB CARD STYLING */
-        /* ------------------------------------------------------------- */
         .luxury-job-card {
             background: linear-gradient(145deg, #0f172a, #1e1b4b);
             border: 1px solid rgba(255, 215, 0, 0.35);
@@ -332,15 +324,10 @@
 
 <div class="container">
 
-    <!-- Auth Section (Login / Register) -->
     <div id="auth-section">
-        <!-- Login Form -->
         <div id="login-form" class="card">
             <h2 style="color:#fff; margin-bottom:15px;">লগইন করুন</h2>
-            
-            <!-- লাল ওয়ার্নিং অ্যালার্ট বক্স (লগইন) -->
             <div id="login-error" class="error-msg-box"></div>
-
             <label>মোবাইল নম্বর</label>
             <input type="text" id="login-mobile" placeholder="017xxxxxxxx">
             <label>পাসওয়ার্ড</label>
@@ -349,13 +336,9 @@
             <p style="margin-top:15px; text-align:center; font-size:14px; color:#9ca3af;">একাউন্ট নেই? <a href="#" onclick="showRegister()" style="color:#38bdf8;">রেজিস্ট্রেশন করুন</a></p>
         </div>
 
-        <!-- Registration Form -->
         <div id="register-form" class="card" style="display:none;">
             <h2 style="color:#fff; margin-bottom:15px;">রেজিস্ট্রেশন করুন</h2>
-
-            <!-- লাল ওয়ার্নিং অ্যালার্ট বক্স (রেজিস্ট্রেশন) -->
             <div id="register-error" class="error-msg-box"></div>
-
             <label>আপনার নাম</label>
             <input type="text" id="reg-name" placeholder="আপনার নাম">
             <label>মোবাইল নম্বর</label>
@@ -369,17 +352,13 @@
         </div>
     </div>
 
-    <!-- Main Application Section -->
     <div id="dashboard-section" style="display:none;">
         
-        <!-- Account Lock Warning for Unverified User -->
         <div id="unverified-warning" class="card" style="background:rgba(245, 158, 11, 0.15); border:1px solid #f59e0b; color:#fbbf24; display:none;">
             ⚠️ <b>একাউন্ট আনভেরিফাইড!</b> সকল অপশন (কাজ, উইথড্র, টিম) ব্যবহার করতে ৳৫০০ দিয়ে একাউন্ট ভেরিফাই করুন।
         </div>
 
-        <!-- TAB 1: HOME / PROFILE (Luxury & Professional Design) -->
         <div id="tab-home" class="tab-content">
-            <!-- Luxury Profile Header Card -->
             <div class="card luxury-profile-card">
                 <div class="profile-header">
                     <div class="avatar-box">
@@ -399,7 +378,6 @@
                 </div>
             </div>
 
-            <!-- Luxury Balance & Stats Grid -->
             <div class="stat-grid">
                 <div class="stat-box luxury-stat-box balance-box">
                     <div class="stat-icon">💰</div>
@@ -417,7 +395,6 @@
                 </div>
             </div>
 
-            <!-- Referral Card -->
             <div class="card luxury-ref-card" style="margin-top:15px;">
                 <div class="ref-header">
                     <span class="ref-icon">🎁</span>
@@ -432,14 +409,10 @@
             <button class="btn luxury-logout-btn" onclick="logout()">🚪 অ্যাকাউন্ট থেকে লগআউট</button>
         </div>
 
-        <!-- TAB 2: VERIFICATION -->
         <div id="tab-verify" class="tab-content" style="display:none;">
             <div class="card">
                 <h3 style="color:#fff; margin-bottom:10px;">একাউন্ট ভেরিফিকেশন (৩০ দিন)</h3>
-                
-                <!-- লাল ওয়ার্নিং অ্যালার্ট (ভেরিফিকেশন) -->
                 <div id="verify-error" class="error-msg-box"></div>
-
                 <p style="font-size:13px; color:#9ca3af; margin: 8px 0;">নিচের বিকাশ নম্বরে ৳৫০০ Send Money করুন এবং TrxID নিচে লিখুন:</p>
                 <p style="background:rgba(255,255,255,0.08); padding:12px; border-radius:8px; font-weight:bold; text-align:center; color:#ffd700; font-size:18px;" id="verify-bkash-num">013637839238</p>
                 
@@ -451,10 +424,8 @@
             </div>
         </div>
 
-        <!-- TAB 3: DAILY JOB ($50,000 ULTRA LUXURY DESIGN) -->
         <div id="tab-job" class="tab-content" style="display:none;">
             <div class="card luxury-job-card">
-                
                 <div class="job-top-bar">
                     <div class="job-badge-title">
                         <span>⚡</span> দৈনিক স্পেশাল টাস্ক
@@ -469,12 +440,9 @@
                         <small>টাস্ক রিওয়ার্ড বোনাস</small>
                         <span>৳৫০.০০</span>
                     </div>
-                    <div class="reward-icon-chip">
-                        💎
-                    </div>
+                    <div class="reward-icon-chip">💎</div>
                 </div>
 
-                <!-- লাল ওয়ার্নিং অ্যালার্ট (জব) -->
                 <div id="job-error" class="error-msg-box"></div>
 
                 <div class="question-box-wrapper">
@@ -486,19 +454,13 @@
                     <input type="text" id="job-ans" placeholder="সঠিক উত্তর এখানে লিখুন..." autocomplete="off">
                 </div>
 
-                <button class="btn btn-luxury-submit" onclick="submitJob()">
-                    ✨ উত্তর জমা দিয়ে ৳৫০ নিন
-                </button>
-
+                <button class="btn btn-luxury-submit" onclick="submitJob()">✨ উত্তর জমা দিয়ে ৳৫০ নিন</button>
             </div>
         </div>
 
-        <!-- TAB 4: WITHDRAW -->
         <div id="tab-withdraw" class="tab-content" style="display:none;">
             <div class="card">
                 <h3 style="color:#fff; margin-bottom:12px;">টাকা তুলুন (Withdraw)</h3>
-
-                <!-- লাল ওয়ার্নিং অ্যালার্ট (উইথড্র) -->
                 <div id="withdraw-error" class="error-msg-box"></div>
 
                 <label>বিকাশ/নগদ নম্বর</label>
@@ -510,7 +472,16 @@
             </div>
         </div>
 
-        <!-- TAB 5: HISTORY & TEAM -->
+        <div id="tab-history" class="tab-content" style="display:none;">
+            <div class="card">
+                <h3 style="color:#fff; margin-bottom:10px;">উইথড্র হিস্ট্রি</h3>
+                <table class="table-custom">
+                    <thead><tr><th>তারিখ</th><th>পরিমাণ</th><th>স্ট্যাটাস</th></tr></thead>
+                    <tbody id="withdraw-history"></tbody>
+                </table>
+            </div>
+        </div>
+
         <div id="tab-team" class="tab-content" style="display:none;">
             <div class="card">
                 <h3 style="color:#fff; margin-bottom:10px;">আমার টিম (রেফারাল তালিকা)</h3>
@@ -518,14 +489,6 @@
                 <table class="table-custom">
                     <thead><tr><th>নাম</th><th>মোবাইল</th><th>স্ট্যাটাস</th></tr></thead>
                     <tbody id="team-list"></tbody>
-                </table>
-            </div>
-
-            <div class="card">
-                <h3 style="color:#fff; margin-bottom:10px;">উইথড্র হিস্ট্রি</h3>
-                <table class="table-custom">
-                    <thead><tr><th>তারিখ</th><th>পরিমাণ</th><th>স্ট্যাটাস</th></tr></thead>
-                    <tbody id="withdraw-history"></tbody>
                 </table>
             </div>
 
@@ -538,13 +501,13 @@
 
 </div>
 
-<!-- Bottom Navigation Tabs -->
 <div class="navbar" id="app-nav" style="display:none;">
     <button class="nav-item active" onclick="switchTab('home')">🏠 হোম</button>
     <button class="nav-item" id="nav-verify-btn" onclick="switchTab('verify')">✅ ভেরিফাই</button>
     <button class="nav-item" id="nav-job-btn" onclick="switchTab('job')">💼 কাজ</button>
     <button class="nav-item" id="nav-withdraw-btn" onclick="switchTab('withdraw')">💸 উইথড্র</button>
-    <button class="nav-item" id="nav-team-btn" onclick="switchTab('team')">👥 টিম & হিস্ট্রি</button>
+    <button class="nav-item" id="nav-history-btn" onclick="switchTab('history')">📜 হিস্ট্রি</button>
+    <button class="nav-item" id="nav-team-btn" onclick="switchTab('team')">👥 টিম</button>
 </div>
 
 <script src="app.js"></script>
