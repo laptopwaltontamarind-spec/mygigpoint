@@ -143,178 +143,192 @@
         }
 
         /* ------------------------------------------------------------- */
-        /* ULTRA LUXURY 50,000$ DAILY JOB CARD STYLING */
+        /* DAILY JOB LUXURY DESIGN */
         /* ------------------------------------------------------------- */
         .luxury-job-card {
             background: linear-gradient(145deg, #0f172a, #1e1b4b);
             border: 1px solid rgba(255, 215, 0, 0.35);
             border-radius: 20px;
             padding: 24px 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        .job-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 12px; }
+        .job-badge-title { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 800; color: #ffffff; }
+        .job-live-indicator { background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.4); color: #4ade80; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+        .job-live-dot { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 8px #22c55e; }
+        .job-reward-banner { background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(245, 158, 11, 0.05)); border: 1px solid rgba(255, 215, 0, 0.4); padding: 14px; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+        .reward-info-left small { display: block; color: #9ca3af; font-size: 11px; text-transform: uppercase; font-weight: 700; }
+        .reward-info-left span { font-size: 22px; font-weight: 900; color: #ffd700; }
+        .reward-icon-chip { font-size: 30px; background: rgba(255, 215, 0, 0.1); padding: 8px 12px; border-radius: 12px; }
+        .question-box-wrapper { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 16px; text-align: center; margin-bottom: 20px; }
+        .question-box-wrapper label { display: block; margin-bottom: 6px; color: #6b7280; font-size: 11px; text-transform: uppercase; }
+        .question-text { font-size: 20px; font-weight: 800; color: #38bdf8; }
+        .input-luxury-wrap input { background: rgba(15, 23, 42, 0.8) !important; border: 1.5px solid rgba(255, 215, 0, 0.3) !important; padding: 16px !important; border-radius: 14px !important; font-size: 16px !important; color: #ffffff !important; text-align: center; font-weight: 700; }
+        .btn-luxury-submit { background: linear-gradient(135deg, #ffd700, #f59e0b) !important; color: #0f172a !important; font-size: 16px !important; font-weight: 900 !important; padding: 16px !important; border-radius: 14px !important; }
+
+        /* ------------------------------------------------------------- */
+        /* WORLD SPIN ANIMATION OVERLAY FOR WITHDRAW ENTRY */
+        /* ------------------------------------------------------------- */
+        #withdraw-entry-animation {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, #111827 0%, #030712 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        #withdraw-entry-animation.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .globe-wrapper {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            margin-bottom: 25px;
+        }
+
+        .globe-icon {
+            font-size: 90px;
+            animation: spin-world 4s linear infinite;
+            filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.6));
+        }
+
+        @keyframes spin-world {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        .globe-ring {
+            position: absolute;
+            top: -10px; left: -10px; right: -10px; bottom: -10px;
+            border: 2px dashed #ffd700;
+            border-radius: 50%;
+            animation: spin-ring 6s linear infinite reverse;
+        }
+
+        @keyframes spin-ring {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .anim-text-funny {
+            font-size: 20px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffd700, #ff8c00, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            animation: text-pulse 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes text-pulse {
+            0% { transform: scale(0.98); opacity: 0.9; }
+            100% { transform: scale(1.03); opacity: 1; filter: drop-shadow(0 0 10px rgba(255,215,0,0.5)); }
+        }
+
+        .anim-subtext {
+            color: #9ca3af;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* SEXY & JAKKASH WITHDRAW CARD STYLING */
+        /* ------------------------------------------------------------- */
+        .sexy-withdraw-card {
+            background: linear-gradient(135deg, #111827 0%, #1e1b4b 50%, #31103f 100%);
+            border: 1px solid rgba(236, 72, 153, 0.4);
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: 0 15px 35px rgba(236, 72, 153, 0.2), 0 0 20px rgba(0, 0, 0, 0.8);
             position: relative;
             overflow: hidden;
         }
 
-        .luxury-job-card::before {
-            content: '';
-            position: absolute;
-            top: -60px;
-            right: -60px;
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.25) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        .job-top-bar {
+        .sexy-title-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
             padding-bottom: 12px;
         }
 
-        .job-badge-title {
+        .sexy-title-header h3 {
+            font-size: 20px;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ec4899, #8b5cf6, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 18px;
-            font-weight: 800;
-            color: #ffffff;
-            letter-spacing: 0.5px;
         }
 
-        .job-live-indicator {
-            background: rgba(34, 197, 94, 0.15);
-            border: 1px solid rgba(34, 197, 94, 0.4);
-            color: #4ade80;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
+        .sexy-input-group label {
+            color: #f472b6;
+            font-size: 13px;
             font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            animation: pulse-glow 2s infinite;
-        }
-
-        .job-live-dot {
-            width: 7px;
-            height: 7px;
-            background: #22c55e;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #22c55e;
-        }
-
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-            70% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
-        }
-
-        .job-reward-banner {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(245, 158, 11, 0.05));
-            border: 1px solid rgba(255, 215, 0, 0.4);
-            padding: 14px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 22px;
-        }
-
-        .reward-info-left small {
             display: block;
-            color: #9ca3af;
-            font-size: 11px;
-            text-transform: uppercase;
-            font-weight: 700;
+            margin-top: 10px;
         }
 
-        .reward-info-left span {
-            font-size: 22px;
-            font-weight: 900;
-            color: #ffd700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-        }
-
-        .reward-icon-chip {
-            font-size: 30px;
-            background: rgba(255, 215, 0, 0.1);
-            padding: 8px 12px;
-            border-radius: 12px;
-        }
-
-        .question-box-wrapper {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 16px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .question-box-wrapper label {
-            display: block;
-            margin-bottom: 6px;
-            color: #6b7280;
-            font-size: 11px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .question-text {
-            font-size: 20px;
-            font-weight: 800;
-            color: #38bdf8;
-            letter-spacing: 0.5px;
-            text-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
-        }
-
-        .input-luxury-wrap {
-            position: relative;
-            margin-bottom: 15px;
-        }
-
-        .input-luxury-wrap input {
-            background: rgba(15, 23, 42, 0.8) !important;
-            border: 1.5px solid rgba(255, 215, 0, 0.3) !important;
-            padding: 16px !important;
-            border-radius: 14px !important;
+        .sexy-input-group input {
+            background: rgba(15, 23, 42, 0.7) !important;
+            border: 1px solid rgba(236, 72, 153, 0.3) !important;
+            border-radius: 12px !important;
+            color: #fff !important;
             font-size: 16px !important;
-            color: #ffffff !important;
-            text-align: center;
             font-weight: 700;
-            letter-spacing: 1px;
         }
 
-        .input-luxury-wrap input::placeholder {
-            color: #4b5563;
-            font-weight: 400;
+        .sexy-input-group input:focus {
+            border-color: #ec4899 !important;
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.4) !important;
         }
 
-        .btn-luxury-submit {
-            background: linear-gradient(135deg, #ffd700, #f59e0b) !important;
-            color: #0f172a !important;
+        .btn-sexy-withdraw {
+            background: linear-gradient(135deg, #ec4899, #8b5cf6) !important;
+            color: #ffffff !important;
             font-size: 16px !important;
             font-weight: 900 !important;
-            padding: 16px !important;
-            border-radius: 14px !important;
-            border: none !important;
-            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.35) !important;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-        }
-
-        .btn-luxury-submit:active {
-            transform: scale(0.98);
+            padding: 15px !important;
+            border-radius: 12px !important;
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.4) !important;
+            margin-top: 15px !important;
         }
     </style>
 </head>
 <body>
+
+<!-- WORLD ANIMATION OVERLAY -->
+<div id="withdraw-entry-animation">
+    <div class="globe-wrapper">
+        <div class="globe-ring"></div>
+        <div class="globe-icon">🌍</div>
+    </div>
+    <div class="anim-text-funny">
+        টাকা তুলে বউ নিয়ে হানিমুনে যাবেন তাইনা? 😜哈哈哈
+    </div>
+    <div class="anim-subtext">
+        🔒 নিরাপদ উইথড্র গেটওয়ে লোড হচ্ছে...
+    </div>
+</div>
 
 <div class="container">
 
@@ -353,9 +367,8 @@
             ⚠️ <b>একাউন্ট আনভেরিফাইড!</b> সকল অপশন (কাজ, উইথড্র, টিম) ব্যবহার করতে ৳৫০০ দিয়ে একাউন্ট ভেরিফাই করুন।
         </div>
 
-        <!-- TAB 1: HOME / PROFILE (Luxury & Professional Design) -->
+        <!-- TAB 1: HOME / PROFILE -->
         <div id="tab-home" class="tab-content">
-            <!-- Luxury Profile Header Card -->
             <div class="card luxury-profile-card">
                 <div class="profile-header">
                     <div class="avatar-box">
@@ -375,7 +388,6 @@
                 </div>
             </div>
 
-            <!-- Luxury Balance & Stats Grid -->
             <div class="stat-grid">
                 <div class="stat-box luxury-stat-box balance-box">
                     <div class="stat-icon">💰</div>
@@ -393,7 +405,6 @@
                 </div>
             </div>
 
-            <!-- Referral Card -->
             <div class="card luxury-ref-card" style="margin-top:15px;">
                 <div class="ref-header">
                     <span class="ref-icon">🎁</span>
@@ -423,55 +434,47 @@
             </div>
         </div>
 
-        <!-- TAB 3: DAILY JOB ($50,000 ULTRA LUXURY DESIGN) -->
+        <!-- TAB 3: DAILY JOB -->
         <div id="tab-job" class="tab-content" style="display:none;">
             <div class="card luxury-job-card">
-                
                 <div class="job-top-bar">
-                    <div class="job-badge-title">
-                        <span>⚡</span> দৈনিক স্পেশাল টাস্ক
-                    </div>
-                    <div class="job-live-indicator">
-                        <span class="job-live-dot"></span> সক্রিয় কাজ
-                    </div>
+                    <div class="job-badge-title"><span>⚡</span> দৈনিক স্পেশাল টাস্ক</div>
+                    <div class="job-live-indicator"><span class="job-live-dot"></span> সক্রিয় কাজ</div>
                 </div>
-
                 <div class="job-reward-banner">
-                    <div class="reward-info-left">
-                        <small>টাস্ক রিওয়ার্ড বোনাস</small>
-                        <span>৳৫০.০০</span>
-                    </div>
-                    <div class="reward-icon-chip">
-                        💎
-                    </div>
+                    <div class="reward-info-left"><small>টাস্ক রিওয়ার্ড বোনাস</small><span>৳৫০.০০</span></div>
+                    <div class="reward-icon-chip">💎</div>
                 </div>
-
                 <div class="question-box-wrapper">
                     <label>আজকের গাণিতিক চ্যালেঞ্জ</label>
                     <p id="job-q" class="question-text">প্রশ্ন লোড হচ্ছে...</p>
                 </div>
-
                 <div class="input-luxury-wrap">
                     <input type="text" id="job-ans" placeholder="সঠিক উত্তর এখানে লিখুন..." autocomplete="off">
                 </div>
-
-                <button class="btn btn-luxury-submit" onclick="submitJob()">
-                    ✨ উত্তর জমা দিয়ে ৳৫০ নিন
-                </button>
-
+                <button class="btn btn-luxury-submit" onclick="submitJob()">✨ উত্তর জমা দিয়ে ৳৫০ নিন</button>
             </div>
         </div>
 
-        <!-- TAB 4: WITHDRAW -->
+        <!-- TAB 4: WITHDRAW (SEXY & JAKKASH PREMIUM DESIGN) -->
         <div id="tab-withdraw" class="tab-content" style="display:none;">
-            <div class="card">
-                <h3 style="color:#fff; margin-bottom:12px;">টাকা তুলুন (Withdraw)</h3>
-                <label>বিকাশ/নগদ নম্বর</label>
-                <input type="text" id="w-number" placeholder="017xxxxxxxx">
-                <label>পরিমাণ (সর্বনিম্ন ৳৫০)</label>
-                <input type="number" id="w-amount" placeholder="300">
-                <small style="color:#9ca3af; display:block; margin-bottom:12px;">*১৫% সার্ভিস চার্জ প্রযোজ্য</small>
-                <button class="btn" onclick="submitWithdraw()">উইথড্র রিকোয়েস্ট দিন</button>
+            <div class="card sexy-withdraw-card">
+                <div class="sexy-title-header">
+                    <h3>💸 ইনস্ট্যান্ট উইথড্র গেটওয়ে</h3>
+                    <span style="font-size:22px;">👑</span>
+                </div>
+                
+                <div class="sexy-input-group">
+                    <label>বিকাশ/নগদ পার্সোনাল নম্বর</label>
+                    <input type="text" id="w-number" placeholder="017xxxxxxxx">
+                    
+                    <label>উইথড্র পরিমাণ (সর্বনিম্ন ৳৫০)</label>
+                    <input type="number" id="w-amount" placeholder="500">
+                </div>
+
+                <small style="color:#f472b6; display:block; margin:10px 0 5px; font-weight:600;">⚡ ১৫% সার্ভিস চার্জ কেটে তাৎক্ষণিক বিকাশ/নগদে পাঠানো হবে।</small>
+                
+                <button class="btn btn-sexy-withdraw" onclick="submitWithdraw()">🔥 ক্যাশ আউট রিকোয়েস্ট পাঠান</button>
             </div>
         </div>
 
@@ -508,10 +511,23 @@
     <button class="nav-item active" onclick="switchTab('home')">🏠 হোম</button>
     <button class="nav-item" id="nav-verify-btn" onclick="switchTab('verify')">✅ ভেরিফাই</button>
     <button class="nav-item" id="nav-job-btn" onclick="switchTab('job')">💼 কাজ</button>
-    <button class="nav-item" id="nav-withdraw-btn" onclick="switchTab('withdraw')">💸 উইথড্র</button>
+    <button class="nav-item" id="nav-withdraw-btn" onclick="triggerWithdrawTab()">💸 উইথড্র</button>
     <button class="nav-item" id="nav-team-btn" onclick="switchTab('team')">👥 টিম & হিস্ট্রি</button>
 </div>
 
+<script>
+    // Special Trigger Function for Animated Withdraw Entry
+    function triggerWithdrawTab() {
+        const animOverlay = document.getElementById('withdraw-entry-animation');
+        animOverlay.classList.add('active');
+        
+        // 2.5 সেকেন্ড পর অ্যানিমেশন বন্ধ হয়ে উইথড্র পেজে প্রবেশ করবে
+        setTimeout(() => {
+            animOverlay.classList.remove('active');
+            switchTab('withdraw');
+        }, 2500);
+    }
+</script>
 <script src="app.js"></script>
 </body>
 </html>
