@@ -54,6 +54,12 @@ const WithdrawSchema = new mongoose.Schema({
 });
 const Withdraw = mongoose.model('Withdraw', WithdrawSchema);
 
+// ---------------- ADMIN PAGE ROUTE ---------------- //
+
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
 // ---------------- USER ENDPOINTS ---------------- //
 
 app.get('/api/settings', async (req, res) => {
