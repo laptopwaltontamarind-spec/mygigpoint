@@ -40,6 +40,173 @@
         .bg-pending { background: #ffc107; color: #000; }
         .bg-approved { background: #28a745; }
         .bg-rejected { background: #dc3545; }
+
+        /* Luxury Profile Styling */
+        .luxury-profile-card {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .luxury-profile-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, rgba(255,215,0,0) 70%);
+            border-radius: 50%;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .avatar-box {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(45deg, #ffd700, #ffa500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        }
+
+        .user-info h3 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+        }
+
+        .status-badge-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-top: 5px;
+            backdrop-filter: blur(5px);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background-color: #28a745;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #28a745;
+        }
+
+        .status-text {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .expire-badge {
+            margin-top: 12px;
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            color: #ffd700;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .luxury-stat-box {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eef2f5;
+            transition: transform 0.2s ease;
+        }
+
+        .luxury-stat-box:active {
+            transform: scale(0.98);
+        }
+
+        .stat-icon {
+            font-size: 28px;
+            background: #f7f9fc;
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .stat-data h4 {
+            font-size: 12px;
+            color: #7a869a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-data p {
+            font-size: 20px;
+            font-weight: 800;
+            color: #172b4d;
+        }
+
+        .luxury-ref-card {
+            background: linear-gradient(135deg, #111827, #1f2937);
+            color: #fff;
+            text-align: center;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .ref-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .ref-header h4 {
+            color: #e5e7eb;
+            font-size: 15px;
+        }
+
+        .ref-code-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed #ffd700;
+            padding: 12px;
+            border-radius: 10px;
+            margin: 8px 0;
+        }
+
+        .ref-code-box p {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #ffd700;
+            margin: 0;
+        }
+
+        .ref-subtext {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 6px;
+        }
+
+        .luxury-logout-btn {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            border: none;
+            box-shadow: 0 4px 12px rgba(255, 75, 43, 0.3);
+            margin-top: 15px;
+            font-size: 15px;
+        }
     </style>
 </head>
 <body>
@@ -81,34 +248,59 @@
             ⚠️ <b>একাউন্ট আনভেরিফাইড!</b> সকল অপশন (কাজ, উইথড্র, টিম) ব্যবহার করতে ৳৫০০ দিয়ে একাউন্ট ভেরিফাই করুন।
         </div>
 
-        <!-- TAB 1: HOME / PROFILE -->
+        <!-- TAB 1: HOME / PROFILE (Luxury & Professional Design) -->
         <div id="tab-home" class="tab-content">
-            <div class="card">
-                <h3>হ্যালো, <span id="u-name">...</span></h3>
-                <p>স্ট্যাটাস: <b id="u-status">...</b></p>
-                <p id="expire-timer-box" style="display:none; color:#28a745; font-size:13px; margin-top:5px;">
+            <!-- Luxury Profile Header Card -->
+            <div class="card luxury-profile-card">
+                <div class="profile-header">
+                    <div class="avatar-box">
+                        <span id="u-avatar">👤</span>
+                    </div>
+                    <div class="user-info">
+                        <h3><span id="u-name">লোডিং...</span></h3>
+                        <div class="status-badge-wrap">
+                            <span class="status-indicator"></span>
+                            <span id="u-status" class="status-text">...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="expire-timer-box" class="expire-badge" style="display:none;">
                     ⏳ মেয়াদের বাকি: <b id="u-expire">--</b>
-                </p>
+                </div>
             </div>
 
+            <!-- Luxury Balance & Stats Grid -->
             <div class="stat-grid">
-                <div class="stat-box">
-                    <h4>বর্তমান ব্যালেন্স</h4>
-                    <p>৳<span id="u-balance">0</span></p>
+                <div class="stat-box luxury-stat-box balance-box">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-data">
+                        <h4>বর্তমান ব্যালেন্স</h4>
+                        <p>৳<span id="u-balance">0</span></p>
+                    </div>
                 </div>
-                <div class="stat-box">
-                    <h4>মোট ইনকাম</h4>
-                    <p>৳<span id="u-total-earned">0</span></p>
+                <div class="stat-box luxury-stat-box income-box">
+                    <div class="stat-icon">💎</div>
+                    <div class="stat-data">
+                        <h4>মোট ইনকাম</h4>
+                        <p>৳<span id="u-total-earned">0</span></p>
+                    </div>
                 </div>
             </div>
 
-            <div class="card" style="margin-top:15px;">
-                <h4>আপনার রেফার কোড</h4>
-                <p style="font-size: 20px; font-weight: bold; color:#0088cc; text-align:center; margin:10px 0;" id="u-refcode">---</p>
-                <small>প্রতিটি সফল ভেরিফাইড রেফারে পাবেন ৳৪০ বোনাস!</small>
+            <!-- Referral Card -->
+            <div class="card luxury-ref-card" style="margin-top:15px;">
+                <div class="ref-header">
+                    <span class="ref-icon">🎁</span>
+                    <h4>আপনার রেফার কোড</h4>
+                </div>
+                <div class="ref-code-box">
+                    <p id="u-refcode">---</p>
+                </div>
+                <p class="ref-subtext">প্রতিটি সফল ভেরিফাইড রেফারে পাবেন <b style="color:#ffd700;">৳৪০</b> বোনাস!</p>
             </div>
             
-            <button class="btn btn-danger" onclick="logout()">লগআউট</button>
+            <button class="btn btn-danger luxury-logout-btn" onclick="logout()">🚪 অ্যাকাউন্ট থেকে লগআউট</button>
         </div>
 
         <!-- TAB 2: VERIFICATION -->
