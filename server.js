@@ -54,6 +54,16 @@ const WithdrawSchema = new mongoose.Schema({
 });
 const Withdraw = mongoose.model('Withdraw', WithdrawSchema);
 
+// পাসওয়ার্ড রিসেট রিকোয়েস্টের নতুন স্কিমা
+const ResetRequestSchema = new mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    mobile: String,
+    name: String,
+    status: { type: String, enum: ['Pending', 'Resolved'], default: 'Pending' },
+    createdAt: { type: Date, default: Date.now }
+});
+const ResetRequest = mongoose.model('ResetRequest', ResetRequestSchema);
+
 // ---------------- ADMIN PAGE ROUTE ---------------- //
 
 app.get('/admin', (req, res) => {
@@ -104,6 +114,28 @@ app.post('/api/login', async (req, res) => {
     }
 
     res.json({ success: true, user });
+});
+
+// পাসওয়ার্ড রিসেট রিকোয়েস্ট পাঠানোর অ্যান্ডপয়েন্ট
+app.post('/api/reset-password-request', async (req, res) => {
+    try {
+        const { mobile } = req.body;
+        const user = await User.findOne({ mobile });
+        if (!user) {
+            return res.status(400).json({ success: false, message: "এই মোবাইল নম্বরে কোনো অ্যাকাউন্ট খুঁজে পাওয়া যায়নি!" });
+        }
+
+        const resetReq = new ResetRequest({
+            userId: user._id,
+            mobile: user.mobile,
+            name: user.name
+        });
+        await resetReq.save();
+
+        res.json({ success: true, message: "পাসওয়ার্ড রিসেট রিকোয়েস্ট সফলভাবে জমা হয়েছে! অ্যাডমিন যোগাযোগ করবে।" });
+    } catch (err) {
+        res.status(500).json({ success: false, message: "সার্ভারে সমস্যা হয়েছে!" });
+    }
 });
 
 app.post('/api/verify-request', async (req, res) => {
@@ -164,13 +196,38 @@ app.post('/api/withdraw', async (req, res) => {
 
 // ---------------- ADMIN ENDPOINTS ---------------- //
 
+// অ্যাডমিন সামারি ডাটা (মোট মেম্বার, মোট টাকা জমা ও মোট উইথড্র দেওয়া পরিমাণ)
+app.get('/api/admin/dashboard-summary', async (req, res) => {
+    try {
+        const totalMembers = await User.countDocuments();
+
+        // Approved হওয়া সব ভেরিফিকেশন রিকোয়েস্টের মোট টাকা যোগ করা
+        const approvedVerifications = await Verification.find({ status: 'Approved' });
+        const totalAmountReceived = approvedVerifications.reduce((sum, item) => sum + (item.amount || 500), 0);
+
+        // Approved হওয়া সব উইথড্র রিকোয়েস্টের মোট টাকা যোগ করা
+        const approvedWithdraws = await Withdraw.find({ status: 'Approved' });
+        const totalWithdrawPaid = approvedWithdraws.reduce((sum, item) => sum + item.amount, 0);
+
+        res.json({
+            success: true,
+            totalMembers,
+            totalAmountReceived,
+            totalWithdrawPaid
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, message: "সামারি ডাটা লোড করতে সমস্যা হয়েছে!" });
+    }
+});
+
 app.get('/api/admin/data', async (req, res) => {
     const users = await User.find().sort({ createdAt: -1 });
     const verifications = await Verification.find().populate('userId').sort({ createdAt: -1 });
     const withdraws = await Withdraw.find().populate('userId').sort({ createdAt: -1 });
+    const resetRequests = await ResetRequest.find().sort({ createdAt: -1 });
     let settings = await Settings.findOne() || await Settings.create({});
 
-    res.json({ users, verifications, withdraws, settings });
+    res.json({ users, verifications, withdraws, resetRequests, settings });
 });
 
 app.post('/api/admin/update-settings', async (req, res) => {
