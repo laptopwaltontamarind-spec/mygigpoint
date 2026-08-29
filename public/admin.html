@@ -3,64 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>অ্যাডমিন প্যানেল</title>
+    <title>অ্যাডমিন প্যানেল | কন্ট্রোল সেন্টার</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f4f6f9; padding: 20px; margin: 0; }
-        .container { max-width: 1000px; margin: 0 auto; }
-        h1 { text-align: center; color: #0088cc; }
-        .card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        table, th, td { border: 1px solid #ddd; }
-        th, td { padding: 10px; text-align: left; font-size: 14px; }
-        th { background: #f0f2f5; }
-        label { display: block; font-weight: bold; margin-top: 10px; font-size: 13px; }
-        input, button { padding: 10px; margin: 5px 0; width: 100%; border-radius: 4px; border: 1px solid #ccc; }
-        button { background: #0088cc; color: white; border: none; font-weight: bold; cursor: pointer; }
-        button:hover { background: #006699; }
-        .btn-sm { width: auto; padding: 5px 10px; font-size: 12px; margin-right: 5px; }
-        .btn-green { background: #28a745; color: white; border: none; }
-        .btn-red { background: #dc3545; color: white; border: none; }
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #38bdf8;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border-color: #334155;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
 
-        /* সামারি কার্ড স্টাইল */
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+        * { box-sizing: border-box; font-family: 'Hind Siliguri', sans-serif; margin: 0; padding: 0; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 20px; min-height: 100vh; }
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        /* ১. পাসওয়ার্ড ভেরিফিকেশন ফর্ম স্টাইল */
+        #login-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center; z-index: 9999;
         }
-        .summary-card {
-            background: #ffffff;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            border-top: 4px solid #0088cc;
+        .login-box {
+            background: var(--card-bg); padding: 30px; border-radius: 16px;
+            border: 1px solid var(--border-color); width: 100%; max-width: 380px;
+            text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
-        .summary-card.members { border-top-color: #17a2b8; }
-        .summary-card.received { border-top-color: #28a745; }
-        .summary-card.withdraw { border-top-color: #dc3545; }
-        .summary-card h4 { margin: 0 0 10px 0; color: #555; font-size: 14px; text-transform: uppercase; }
-        .summary-card h2 { margin: 0; font-size: 26px; color: #222; }
+        .login-box h2 { margin-bottom: 8px; color: var(--accent-color); font-size: 22px; }
+        .login-box p { color: var(--text-sub); font-size: 14px; margin-bottom: 20px; }
+
+        /* কমন ইনপুট ও বাটন স্টাইল */
+        input {
+            width: 100%; padding: 12px; margin: 8px 0 16px;
+            border-radius: 8px; border: 1px solid var(--border-color);
+            background: #0f172a; color: #fff; font-size: 14px; outline: none;
+        }
+        input:focus { border-color: var(--accent-color); }
+        button {
+            width: 100%; padding: 12px; background: var(--accent-color); color: #0f172a;
+            border: none; border-radius: 8px; font-weight: 700; font-size: 15px;
+            cursor: pointer; transition: 0.2s ease;
+        }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* হেডার ও কার্ড ডিজাইন */
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        header h1 { font-size: 24px; color: var(--accent-color); }
+        .btn-logout { width: auto; padding: 8px 16px; background: #334155; color: #fff; }
+
+        .card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            padding: 22px; border-radius: 14px; margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .card h3 { color: var(--accent-color); font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+        label { display: block; font-size: 13px; color: var(--text-sub); margin-top: 10px; }
+
+        /* সামারি গ্রিড */
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .summary-card { background: var(--card-bg); border: 1px solid var(--border-color); padding: 20px; border-radius: 12px; text-align: center; }
+        .summary-card h4 { color: var(--text-sub); font-size: 14px; font-weight: 400; }
+        .summary-card h2 { font-size: 28px; margin-top: 5px; }
+
+        /* টেবিল রেসপন্সিভ স্টাইল */
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; }
+        th, td { padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        th { background: #0f172a; color: var(--text-sub); font-weight: 600; }
+        td code { background: #0f172a; padding: 2px 6px; border-radius: 4px; color: var(--accent-color); }
+
+        .btn-sm { width: auto; padding: 6px 12px; font-size: 12px; margin-right: 5px; }
+        .btn-green { background: var(--success); color: #fff; }
+        .btn-red { background: var(--danger); color: #fff; }
+        .error-text { color: var(--danger); font-size: 13px; margin-top: 8px; display: none; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>অ্যাডমিন কন্ট্রোল প্যানেল</h1>
 
-        <!-- সামারি কার্ড সেকশন -->
+    <!-- পাসওয়ার্ড ভেরিফিকেশন পপআপ (Login Overlay) -->
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2>🔒 অ্যাডমিন সিকিউরিটি</h2>
+            <p>প্যানেলে প্রবেশ করতে সিক্রেট পাসওয়ার্ড লিখুন</p>
+            <input type="password" id="admin-pass-input" placeholder="পাসওয়ার্ড লিখুন">
+            <button onclick="verifyAdminPass()">প্রবেশ করুন</button>
+            <p id="pass-error" class="error-text">❌ ভুল পাসওয়ার্ড! আবার চেষ্টা করুন।</p>
+        </div>
+    </div>
+
+    <!-- মূল অ্যাডমিন প্যানেল কন্টেন্ট (প্রথমে হাইড থাকবে) -->
+    <div class="container" id="admin-dashboard" style="display: none;">
+        <header>
+            <h1>অ্যাডমিন কন্ট্রোল সেন্টার</h1>
+            <button class="btn-logout" onclick="adminLogout()">লগআউট</button>
+        </header>
+
+        <!-- ওভারভিউ / সামারি কার্ড -->
         <div class="summary-grid">
-            <div class="summary-card members">
+            <div class="summary-card">
                 <h4>মোট মেম্বার</h4>
-                <h2 id="sum-members">০ জন</h2>
+                <h2 id="sum-members" style="color: var(--accent-color);">০ জন</h2>
             </div>
-            <div class="summary-card received">
+            <div class="summary-card">
                 <h4>মোট জমা (Approved)</h4>
-                <h2 id="sum-received">৳০</h2>
+                <h2 id="sum-received" style="color: var(--success);">৳০</h2>
             </div>
-            <div class="summary-card withdraw">
+            <div class="summary-card">
                 <h4>মোট উইথড্র (Approved)</h4>
-                <h2 id="sum-withdraw">৳০</h2>
+                <h2 id="sum-withdraw" style="color: var(--danger);">৳০</h2>
             </div>
         </div>
 
@@ -73,7 +126,7 @@
             <label>bKash ভেরিফিকেশন নম্বর:</label> 
             <input type="text" id="cfg-bkash">
             
-            <label>টেলিগ্রাম সাপোর্ট username (যেমন: @AdminSupport):</label> 
+            <label>টেলিগ্রাম সাপোর্ট Username (যেমন: @AdminSupport):</label> 
             <input type="text" id="cfg-support">
             
             <label>ডেইলি জব প্রশ্ন:</label> 
@@ -88,87 +141,130 @@
         <!-- Members Card -->
         <div class="card">
             <h3>২. রেজিস্টার্ড মেম্বার তালিকা</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>নাম ও নম্বর</th>
-                        <th>Ref Code</th>
-                        <th>Referred By</th>
-                        <th>ব্যালেন্স</th>
-                        <th>ভেরিফাইড?</th>
-                        <th>অ্যাকশন</th>
-                    </tr>
-                </thead>
-                <tbody id="users-table"></tbody>
-            </table>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>নাম ও নম্বর</th>
+                            <th>Ref Code</th>
+                            <th>Referred By</th>
+                            <th>ব্যালেন্স</th>
+                            <th>ভেরিফাইড?</th>
+                            <th>অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table"></tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Verification Requests -->
         <div class="card">
             <h3>৩. ভেরিফিকেশন রিকোয়েস্ট</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ইউজার</th>
-                        <th>bKash Sender</th>
-                        <th>TrxID</th>
-                        <th>স্ট্যাটাস</th>
-                        <th>অ্যাকশন</th>
-                    </tr>
-                </thead>
-                <tbody id="verify-table"></tbody>
-            </table>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ইউজার</th>
+                            <th>bKash Sender</th>
+                            <th>TrxID</th>
+                            <th>স্ট্যাটাস</th>
+                            <th>অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="verify-table"></tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Withdraw Requests -->
         <div class="card">
             <h3>৪. উইথড্র রিকোয়েস্ট</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ইউজার</th>
-                        <th>পেমেন্ট নম্বর</th>
-                        <th>মোট Amount</th>
-                        <th>ফি বাদে পাবে (৮৫%)</th>
-                        <th>স্ট্যাটাস</th>
-                        <th>অ্যাকশন</th>
-                    </tr>
-                </thead>
-                <tbody id="withdraw-table"></tbody>
-            </table>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ইউজার</th>
+                            <th>পেমেন্ট নম্বর</th>
+                            <th>মোট Amount</th>
+                            <th>ফি বাদে পাবে (৮৫%)</th>
+                            <th>স্ট্যাটাস</th>
+                            <th>অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="withdraw-table"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", loadAdminData);
+        // 🔑 আপনার সিক্রেট পাসওয়ার্ড এখানে সেট করুন
+        const ADMIN_SECRET = "admin123"; 
 
+        // পেজ লোড হওয়ার পর সিকিউরিটি চেক
+        document.addEventListener("DOMContentLoaded", () => {
+            const isAuth = sessionStorage.getItem("adminAuth");
+            if (isAuth === "true") {
+                unlockDashboard();
+            }
+        });
+
+        // পাসওয়ার্ড ভেরিফিকেশন
+        function verifyAdminPass() {
+            const inputPass = document.getElementById("admin-pass-input").value;
+            const errorElem = document.getElementById("pass-error");
+
+            if (inputPass === ADMIN_SECRET) {
+                sessionStorage.setItem("adminAuth", "true");
+                unlockDashboard();
+            } else {
+                errorElem.style.display = "block";
+                document.getElementById("admin-pass-input").value = "";
+            }
+        }
+
+        // ড্যাশবোর্ড আনলক করা ও ডাটা লোড
+        function unlockDashboard() {
+            document.getElementById("login-overlay").style.display = "none";
+            document.getElementById("admin-dashboard").style.display = "block";
+            loadAdminData();
+        }
+
+        // লগআউট
+        function adminLogout() {
+            sessionStorage.removeItem("adminAuth");
+            location.reload();
+        }
+
+        // ডাটা লোডিং লজিক
         async function loadAdminData() {
             try {
                 const res = await fetch('/api/admin/data');
                 const data = await res.json();
 
-                // ১. মোট মেম্বার গণনা
+                // ১. মোট মেম্বার
                 const totalMembers = data.users ? data.users.length : 0;
                 document.getElementById('sum-members').innerText = `${totalMembers} জন`;
 
-                // ২. মোট ভেরিফিকেশন ফি ( Approved রিকোয়েস্ট প্রতি ৫০০ টাকা হিসাব )
+                // ২. মোট জমা (Approved Verification)
                 let totalReceived = 0;
-                if (data.verifications && data.verifications.length > 0) {
-                    const approvedVerifications = data.verifications.filter(v => v.status === 'Approved');
-                    totalReceived = approvedVerifications.length * 500;
+                if (data.verifications) {
+                    const approved = data.verifications.filter(v => v.status === 'Approved');
+                    totalReceived = approved.length * 500;
                 }
                 document.getElementById('sum-received').innerText = `৳${totalReceived}`;
 
-                // ৩. মোট অনুমোদনকৃত উইথড্র গণনা
+                // ৩. মোট উইথড্র (Approved Withdraw)
                 let totalWithdraw = 0;
-                if (data.withdraws && data.withdraws.length > 0) {
+                if (data.withdraws) {
                     totalWithdraw = data.withdraws
                         .filter(w => w.status === 'Approved')
                         .reduce((sum, w) => sum + Number(w.amount || 0), 0);
                 }
                 document.getElementById('sum-withdraw').innerText = `৳${totalWithdraw}`;
 
-                // Load Settings
+                // Settings
                 if (data.settings) {
                     document.getElementById('cfg-limit').value = data.settings.maxMemberLimit || 100;
                     document.getElementById('cfg-bkash').value = data.settings.verificationBkashNumber || '';
@@ -177,12 +273,12 @@
                     document.getElementById('cfg-job-a').value = data.settings.dailyJobAnswer || '';
                 }
 
-                // Load Users
+                // Users
                 const usersTable = document.getElementById('users-table');
                 if (data.users && data.users.length > 0) {
                     usersTable.innerHTML = data.users.map(u => `
                         <tr>
-                            <td><b>${u.name}</b><br><small>${u.mobile}</small></td>
+                            <td><b>${u.name}</b><br><small style="color:var(--text-sub);">${u.mobile}</small></td>
                             <td><code>${u.ownReferralCode}</code></td>
                             <td>${u.referralId || 'Direct'}</td>
                             <td>৳${u.balance}</td>
@@ -191,10 +287,10 @@
                         </tr>
                     `).join('');
                 } else {
-                    usersTable.innerHTML = '<tr><td colspan="6" style="text-align:center;">কোনো মেম্বার রেজিস্টার করেনি</td></tr>';
+                    usersTable.innerHTML = '<tr><td colspan="6" style="text-align:center;">কোনো মেম্বার পাওয়া যায়নি</td></tr>';
                 }
 
-                // Load Verifications
+                // Verifications
                 const verifyTable = document.getElementById('verify-table');
                 if (data.verifications && data.verifications.length > 0) {
                     verifyTable.innerHTML = data.verifications.map(v => `
@@ -215,7 +311,7 @@
                     verifyTable.innerHTML = '<tr><td colspan="5" style="text-align:center;">কোনো ভেরিফিকেশন রিকোয়েস্ট নেই</td></tr>';
                 }
 
-                // Load Withdraws
+                // Withdraws
                 const withdrawTable = document.getElementById('withdraw-table');
                 if (data.withdraws && data.withdraws.length > 0) {
                     withdrawTable.innerHTML = data.withdraws.map(w => `
@@ -237,7 +333,7 @@
                     withdrawTable.innerHTML = '<tr><td colspan="6" style="text-align:center;">কোনো উইথড্র রিকোয়েস্ট নেই</td></tr>';
                 }
             } catch (err) {
-                console.error("Error fetching admin data:", err);
+                console.error("Error loading admin data:", err);
             }
         }
 
@@ -273,7 +369,6 @@
             }
         }
 
-        // ভেরিফিকেশন Approve করা
         async function approveVerify(requestId) {
             if (!confirm("আপনি কি নিশ্চিত এই ভেরিফিকেশন Approve করতে চান?")) return;
             const res = await fetch('/api/admin/approve-verification', {
@@ -286,9 +381,8 @@
             loadAdminData();
         }
 
-        // ভেরিফিকেশন Reject করা
         async function rejectVerify(requestId) {
-            if (!confirm("আপনি কি নিশ্চিত এই ভেরিফিকেশন রিকোয়েস্টটি Reject করতে চান?")) return;
+            if (!confirm("আপনি কি নিশ্চিত এই ভেরিফিকেশন Reject করতে চান?")) return;
             const res = await fetch('/api/admin/reject-verification', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -299,7 +393,6 @@
             loadAdminData();
         }
 
-        // উইথড্র Approve / Reject করা
         async function updateWithdraw(withdrawId, status) {
             if (!confirm(`আপনি কি এই উইথড্র রিকোয়েস্টটি ${status} করতে চান?`)) return;
             const res = await fetch('/api/admin/update-withdraw-status', {
