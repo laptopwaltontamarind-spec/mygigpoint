@@ -41,13 +41,22 @@ loadSiteSettings();
 function showRegister() {
     clearMessages();
     document.getElementById('login-form').style.display = 'none';
+    if (document.getElementById('reset-form')) document.getElementById('reset-form').style.display = 'none';
     document.getElementById('register-form').style.display = 'block';
 }
 
 function showLogin() {
     clearMessages();
     document.getElementById('register-form').style.display = 'none';
+    if (document.getElementById('reset-form')) document.getElementById('reset-form').style.display = 'none';
     document.getElementById('login-form').style.display = 'block';
+}
+
+function showReset() {
+    clearMessages();
+    document.getElementById('login-form').style.display = 'none';
+    document.getElementById('register-form').style.display = 'none';
+    if (document.getElementById('reset-form')) document.getElementById('reset-form').style.display = 'block';
 }
 
 // অ্যাকাউন্ট রেজিস্ট্রেশন
@@ -107,6 +116,35 @@ async function login() {
         }
     } catch (err) {
         showMessage('login-error', 'লগইন করতে সমস্যা হচ্ছে!');
+    }
+}
+
+// পাসওয়ার্ড রিসেট রিকোয়েস্ট ফাংশন
+async function resetPassword() {
+    clearMessages();
+    const mobileElem = document.getElementById('reset-mobile');
+    const mobile = mobileElem ? mobileElem.value : '';
+
+    if (!mobile) {
+        return showMessage('reset-error', 'আপনার নিবন্ধিত নম্বরটি প্রদান করুন!');
+    }
+
+    try {
+        const res = await fetch('/api/reset-password-request', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mobile })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            if (mobileElem) mobileElem.value = '';
+            showMessage('reset-error', data.message || 'পাসওয়ার্ড রিসেট রিকোয়েস্ট সফলভাবে জমা হয়েছে!', false);
+        } else {
+            showMessage('reset-error', data.message || 'এই মোবাইল নম্বরে কোনো অ্যাকাউন্ট পাওয়া যায়নি!');
+        }
+    } catch (err) {
+        showMessage('reset-error', 'সার্ভারে সমস্যা হয়েছে! পুনরায় চেষ্টা করুন।');
     }
 }
 
@@ -260,7 +298,7 @@ function highlightNav(tabName) {
     const verifyBtn = document.getElementById('nav-verify-btn');
     const moreBtn = document.getElementById('nav-more-btn');
 
-    // আগে সব বাটন থেকে active তুলে নেওয়া
+    // আগে সব বাটন থেকে active তুলে নেওয়া
     document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
 
     if (tabName === 'home') {
@@ -285,7 +323,7 @@ function selectSubTab(tabName) {
     switchTab(tabName);
 }
 
-// স্ক্রিনের অন্য কোথাও ক্লিক করলে ড্রপডাউন বন্ধ হওয়া
+// স্ক্রিনের অন্য কোথাও ক্লিক করলে ড্রপডাউন বন্ধ হওয়া
 window.addEventListener('click', function(e) {
     const menuBtn = document.getElementById('nav-more-btn');
     const menuContent = document.getElementById('more-menu');
