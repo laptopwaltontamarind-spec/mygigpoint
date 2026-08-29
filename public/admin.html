@@ -200,9 +200,9 @@
 
     <script>
         // 🔑 আপনার সিক্রেট পাসওয়ার্ড এখানে সেট করুন
-        const ADMIN_SECRET = "admin123"; 
+        const ADMIN_SECRET = "adminSHYKOT"; 
 
-        // পেজ লোড হওয়ার পর সিকিউরিটি চেক
+        // পেজ লোড হওয়ার পর সিকিউরিটি চেক
         document.addEventListener("DOMContentLoaded", () => {
             const isAuth = sessionStorage.getItem("adminAuth");
             if (isAuth === "true") {
@@ -250,7 +250,7 @@
                 // ২. মোট জমা (Approved Verification)
                 let totalReceived = 0;
                 if (data.verifications) {
-                    const approved = data.verifications.filter(v => v.status === 'Approved');
+                    const approved = data.verifications.filter(v => v.status && v.status.toLowerCase() === 'approved');
                     totalReceived = approved.length * 500;
                 }
                 document.getElementById('sum-received').innerText = `৳${totalReceived}`;
@@ -259,7 +259,7 @@
                 let totalWithdraw = 0;
                 if (data.withdraws) {
                     totalWithdraw = data.withdraws
-                        .filter(w => w.status === 'Approved')
+                        .filter(w => w.status && w.status.toLowerCase() === 'approved')
                         .reduce((sum, w) => sum + Number(w.amount || 0), 0);
                 }
                 document.getElementById('sum-withdraw').innerText = `৳${totalWithdraw}`;
@@ -273,7 +273,7 @@
                     document.getElementById('cfg-job-a').value = data.settings.dailyJobAnswer || '';
                 }
 
-                // Users
+                // Users Table
                 const usersTable = document.getElementById('users-table');
                 if (data.users && data.users.length > 0) {
                     usersTable.innerHTML = data.users.map(u => `
@@ -290,45 +290,81 @@
                     usersTable.innerHTML = '<tr><td colspan="6" style="text-align:center;">কোনো মেম্বার পাওয়া যায়নি</td></tr>';
                 }
 
-                // Verifications
+                // Verifications Table (স্ট্যাটাস অনুযায়ী বাটন ও ব্যাজ ফিল্টারিং)
                 const verifyTable = document.getElementById('verify-table');
                 if (data.verifications && data.verifications.length > 0) {
-                    verifyTable.innerHTML = data.verifications.map(v => `
-                        <tr>
-                            <td>${v.userId ? v.userId.mobile : 'Unknown'}</td>
-                            <td>${v.bkashSender}</td>
-                            <td><code>${v.trxId}</code></td>
-                            <td><b>${v.status}</b></td>
-                            <td>
-                                ${v.status === 'Pending' ? `
-                                    <button class="btn-sm btn-green" onclick="approveVerify('${v._id}')">Approve</button>
-                                    <button class="btn-sm btn-red" onclick="rejectVerify('${v._id}')">Reject</button>
-                                ` : v.status}
-                            </td>
-                        </tr>
-                    `).join('');
+                    verifyTable.innerHTML = data.verifications.map(v => {
+                        const status = (v.status || '').toLowerCase();
+                        let statusBadge = '';
+                        let actionButtons = '';
+
+                        if (status === 'pending') {
+                            statusBadge = '<span style="color: #f59e0b; font-weight: bold;">Pending</span>';
+                            actionButtons = `
+                                <button class="btn-sm btn-green" onclick="approveVerify('${v._id}')">Approve</button>
+                                <button class="btn-sm btn-red" onclick="rejectVerify('${v._id}')">Reject</button>
+                            `;
+                        } else if (status === 'approved') {
+                            statusBadge = '<span style="color: #22c55e; font-weight: bold;">✅ Approved</span>';
+                            actionButtons = '<span style="color: #94a3b8; font-size: 13px;">সম্পন্ন হয়েছে</span>';
+                        } else if (status === 'rejected') {
+                            statusBadge = '<span style="color: #ef4444; font-weight: bold;">❌ Rejected</span>';
+                            actionButtons = '<span style="color: #ef4444; font-size: 13px;">বাতিল করা হয়েছে</span>';
+                        } else {
+                            statusBadge = `<b>${v.status}</b>`;
+                            actionButtons = '-';
+                        }
+
+                        return `
+                            <tr>
+                                <td>${v.userId ? v.userId.mobile : 'Unknown'}</td>
+                                <td>${v.bkashSender}</td>
+                                <td><code>${v.trxId}</code></td>
+                                <td>${statusBadge}</td>
+                                <td>${actionButtons}</td>
+                            </tr>
+                        `;
+                    }).join('');
                 } else {
                     verifyTable.innerHTML = '<tr><td colspan="5" style="text-align:center;">কোনো ভেরিফিকেশন রিকোয়েস্ট নেই</td></tr>';
                 }
 
-                // Withdraws
+                // Withdraws Table (স্ট্যাটাস অনুযায়ী বাটন ও ব্যাজ ফিল্টারিং)
                 const withdrawTable = document.getElementById('withdraw-table');
                 if (data.withdraws && data.withdraws.length > 0) {
-                    withdrawTable.innerHTML = data.withdraws.map(w => `
-                        <tr>
-                            <td>${w.userId ? w.userId.mobile : 'Unknown'}</td>
-                            <td>${w.paymentNumber}</td>
-                            <td>৳${w.amount}</td>
-                            <td>৳${w.finalAmount}</td>
-                            <td><b>${w.status}</b></td>
-                            <td>
-                                ${w.status === 'Pending' ? `
-                                    <button class="btn-sm btn-green" onclick="updateWithdraw('${w._id}', 'Approved')">Approve</button>
-                                    <button class="btn-sm btn-red" onclick="updateWithdraw('${w._id}', 'Rejected')">Reject</button>
-                                ` : w.status}
-                            </td>
-                        </tr>
-                    `).join('');
+                    withdrawTable.innerHTML = data.withdraws.map(w => {
+                        const status = (w.status || '').toLowerCase();
+                        let statusBadge = '';
+                        let actionButtons = '';
+
+                        if (status === 'pending') {
+                            statusBadge = '<span style="color: #f59e0b; font-weight: bold;">Pending</span>';
+                            actionButtons = `
+                                <button class="btn-sm btn-green" onclick="updateWithdraw('${w._id}', 'Approved')">Approve</button>
+                                <button class="btn-sm btn-red" onclick="updateWithdraw('${w._id}', 'Rejected')">Reject</button>
+                            `;
+                        } else if (status === 'approved') {
+                            statusBadge = '<span style="color: #22c55e; font-weight: bold;">✅ Approved</span>';
+                            actionButtons = '<span style="color: #94a3b8; font-size: 13px;">সম্পন্ন হয়েছে</span>';
+                        } else if (status === 'rejected') {
+                            statusBadge = '<span style="color: #ef4444; font-weight: bold;">❌ Rejected</span>';
+                            actionButtons = '<span style="color: #ef4444; font-size: 13px;">বাতিল করা হয়েছে</span>';
+                        } else {
+                            statusBadge = `<b>${w.status}</b>`;
+                            actionButtons = '-';
+                        }
+
+                        return `
+                            <tr>
+                                <td>${w.userId ? w.userId.mobile : 'Unknown'}</td>
+                                <td>${w.paymentNumber}</td>
+                                <td>৳${w.amount}</td>
+                                <td>৳${w.finalAmount}</td>
+                                <td>${statusBadge}</td>
+                                <td>${actionButtons}</td>
+                            </tr>
+                        `;
+                    }).join('');
                 } else {
                     withdrawTable.innerHTML = '<tr><td colspan="6" style="text-align:center;">কোনো উইথড্র রিকোয়েস্ট নেই</td></tr>';
                 }
