@@ -511,7 +511,7 @@
     <div id="dashboard-section" style="display:none;">
         
         <div id="unverified-warning" class="card" style="background:rgba(245, 158, 11, 0.15); border:1px solid #f59e0b; color:#fbbf24; display:none;">
-            ⚠️ <b>একাউন্ট আনভেরিফাইড!</b> সকল অপশন (কাজ, উইথড্র, টিম) ব্যবহার করতে ৳৫০০ দিয়ে একাউন্ট ভেরিফাই করুন।
+            ⚠️ <b>একাউন্ট আনভেরিফাইড!</b> সকল অপশন (কাজ, উইথড্র, টিম) ব্যবহার করতে ৳100 দিয়ে একাউন্ট ভেরিফাই করুন।
         </div>
 
         <div id="tab-home" class="tab-content">
@@ -559,7 +559,7 @@
                 <div class="ref-code-box">
                     <p id="u-refcode" style="margin:0;">---</p>
                 </div>
-                <p class="ref-subtext">প্রতিটি সফল ভেরিফাইড রেফারে পাবেন <b style="color:#ffd700;">৳৪০</b> বোনাস!</p>
+                <p class="ref-subtext">প্রতিটি সফল ভেরিফাইড রেফারে পাবেন <b style="color:#ffd700;">৳44</b> বোনাস!</p>
             </div>
             
             <button class="btn luxury-logout-btn" onclick="logout()">🚪 অ্যাকাউন্ট থেকে লগআউট</button>
@@ -569,7 +569,7 @@
             <div class="card">
                 <h3 style="color:#fff; margin-bottom:10px;">একাউন্ট ভেরিফিকেশন (৩০ দিন)</h3>
                 <div id="verify-error" class="error-msg-box"></div>
-                <p style="font-size:13px; color:#9ca3af; margin: 8px 0;">নিচের বিকাশ নম্বরে ৳৫০০ Send Money করুন এবং TrxID নিচে লিখুন:</p>
+                <p style="font-size:13px; color:#9ca3af; margin: 8px 0;">নিচের বিকাশ নম্বরে ৳100 Send Money করুন এবং TrxID নিচে লিখুন:</p>
                 <p style="background:rgba(255,255,255,0.08); padding:12px; border-radius:8px; font-weight:bold; text-align:center; color:#ffd700; font-size:18px;" id="verify-bkash-num">013637839238</p>
                 
                 <label style="margin-top:12px; display:block;">আপনার বিকাশ নম্বর</label>
@@ -594,7 +594,7 @@
                 <div class="job-reward-banner">
                     <div class="reward-info-left">
                         <small>টাস্ক রিওয়ার্ড বোনাস</small>
-                        <span>৳৫০.০০</span>
+                        <span>৳15.০০</span>
                     </div>
                     <div class="reward-icon-chip">💎</div>
                 </div>
@@ -610,16 +610,24 @@
                     <input type="text" id="job-ans" placeholder="সঠিক উত্তর এখানে লিখুন..." autocomplete="off">
                 </div>
 
-                <button class="btn btn-luxury-submit" onclick="submitJob()">✨ উত্তর জমা দিয়ে ৳৫০ নিন</button>
+                <button class="btn btn-luxury-submit" onclick="submitJob()">✨ উত্তর জমা দিয়ে ৳15 নিন</button>
             </div>
         </div>
+              <div class="input-luxury-wrap">
+                    <input type="text" id="job-ans" placeholder="সঠিক উত্তর এখানে লিখুন..." autocomplete="off">
+                </div>
 
+                <button class="btn btn-luxury-submit" onclick="submitJob()">✨ উত্তর জমা দিয়ে ৳15 নিন</button>
+            </div>
+        </div>
+        
         <div id="tab-withdraw" class="tab-content" style="display:none;">
             <div class="card">
                 <h3 style="color:#fff; margin-bottom:12px;">টাকা তুলুন (Withdraw)</h3>
                 <div id="withdraw-error" class="error-msg-box"></div>
 
-                <label>বিকাশ/নগদ নম্বর</label>
+                <label>বিকাশ নম্বর</label>
+                 <label>নগদ নম্বর</label>
                 <input type="text" id="w-number" placeholder="017xxxxxxxx">
                 <label>পরিমাণ (সর্বনিম্ন ৳৫০)</label>
                 <input type="number" id="w-amount" placeholder="300">
