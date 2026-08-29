@@ -9,11 +9,19 @@
         * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
         body { background-color: #0b0f19; color: #f3f4f6; padding-bottom: 80px; overflow-x: hidden; touch-action: pan-y; }
         .container { max-width: 480px; margin: 0 auto; padding: 15px; }
-        .card { background: #161f30; padding: 18px; border-radius: 16px; margin-bottom: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #0088cc, #005580); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 15px; letter-spacing: 0.5px; transition: all 0.3s ease; text-align: center; text-decoration: none; display: block; }
+        
+        /* কাস্টম ব্লু ও মডার্ন থিম কার্ড */
+        .card { background: #161f30; padding: 22px; border-radius: 16px; margin-bottom: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .auth-card { background: #182232; border: 1px solid rgba(24, 119, 242, 0.2); text-align: center; }
+        .auth-card h2 { color: #1877f2; margin-bottom: 8px; font-size: 24px; font-weight: 800; }
+        .auth-subtext { color: #9ca3af; font-size: 13px; margin-bottom: 20px; }
+        
+        .btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #1877f2, #0056b3); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 16px; transition: all 0.3s ease; text-align: center; text-decoration: none; display: block; }
+        .btn:active { transform: scale(0.98); }
         .btn-danger { background: linear-gradient(135deg, #ff416c, #ff4b2b); }
         .btn-tutorial { background: linear-gradient(135deg, #f59e0b, #d97706); }
         .btn-support { background: linear-gradient(135deg, #25d366, #128c7e); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.1); color: #fff; margin-top: 15px; border: 1px solid rgba(255, 255, 255, 0.15); }
         
         .error-msg-box {
             display: none;
@@ -34,9 +42,9 @@
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
         }
-        input { width: 100%; padding: 12px 16px; margin: 8px 0 14px; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 15px; outline: none; transition: all 0.3s ease; }
-        input:focus { border-color: #ffd700; box-shadow: 0 0 12px rgba(255, 215, 0, 0.3); background: rgba(255, 255, 255, 0.08); }
-        label { font-size: 13px; color: #9ca3af; font-weight: 600; }
+        input { width: 100%; padding: 14px 16px; margin: 6px 0 14px; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: #fff; font-size: 15px; outline: none; transition: all 0.3s ease; }
+        input:focus { border-color: #1877f2; box-shadow: 0 0 12px rgba(24, 119, 242, 0.4); background: rgba(255, 255, 255, 0.08); }
+        label { font-size: 13px; color: #9ca3af; font-weight: 600; text-align: left; display: block; }
 
         /* Navbar Layout */
         .navbar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 25, 38, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 10px 8px; border-top: 1px solid rgba(255, 255, 255, 0.1); max-width: 480px; margin: 0 auto; z-index: 999; }
@@ -374,7 +382,7 @@
             transform: scale(0.98);
         }
 
-        /* --- Custom Premium Animation Overlays --- */
+        /* Overlays */
         .custom-overlay {
             position: fixed;
             top: 0;
@@ -483,37 +491,53 @@
 <div class="container">
 
     <div id="auth-section">
-        <div id="login-form" class="card">
-            <h2 style="color:#fff; margin-bottom:15px;">লগইন করুন</h2>
+        <!-- মডার্ন প্রফেশনাল লগইন কার্ড -->
+        <div id="login-form" class="card auth-card">
+            <h2>লগইন করুন</h2>
+            <p class="auth-subtext">আপনার অ্যাকাউন্টে প্রবেশ করতে তথ্য দিন</p>
+
             <div id="login-error" class="error-msg-box"></div>
+            
             <label>মোবাইল নম্বর</label>
             <input type="text" id="login-mobile" placeholder="017xxxxxxxx">
+            
             <label>পাসওয়ার্ড</label>
             <input type="password" id="login-password" placeholder="******">
-            <button class="btn" onclick="login()">লগইন</button>
-            <p style="margin-top:15px; text-align:center; font-size:14px; color:#9ca3af;">একাউন্ট নেই? <a href="#" onclick="showRegister()" style="color:#38bdf8;">রেজিস্ট্রেশন করুন</a></p>
+            
+            <button class="btn" onclick="login()">লগইন করুন</button>
+            
+            <button class="btn btn-secondary" onclick="showRegister()">নতুন অ্যাকাউন্ট তৈরি করুন</button>
         </div>
 
-        <div id="register-form" class="card" style="display:none;">
-            <h2 style="color:#fff; margin-bottom:15px;">রেজিস্ট্রেশন করুন</h2>
+        <!-- মডার্ন প্রফেশনাল রেজিস্ট্রেশন কার্ড -->
+        <div id="register-form" class="card auth-card" style="display:none;">
+            <h2>রেজিস্ট্রেশন করুন</h2>
+            <p class="auth-subtext">নতুন অ্যাকাউন্ট খুলতে নিচের ফর্মটি পূরণ করুন</p>
+
             <div id="register-error" class="error-msg-box"></div>
+            
             <label>আপনার নাম</label>
             <input type="text" id="reg-name" placeholder="আপনার নাম">
+            
             <label>মোবাইল নম্বর</label>
             <input type="text" id="reg-mobile" placeholder="017xxxxxxxx">
+            
             <label>রেফারেল কোড (ঐচ্ছিক)</label>
             <input type="text" id="reg-ref" placeholder="REF123456">
+            
             <label>পাসওয়ার্ড</label>
             <input type="password" id="reg-password" placeholder="******">
-            <button class="btn" onclick="register()">রেজিস্টার</button>
-            <p style="margin-top:15px; text-align:center; font-size:14px; color:#9ca3af;">আগে থেকেই একাউন্ট আছে? <a href="#" onclick="showLogin()" style="color:#38bdf8;">লগইন করুন</a></p>
+            
+            <button class="btn" onclick="register()">রেজিস্টার করুন</button>
+            
+            <button class="btn btn-secondary" onclick="showLogin()">আগে থেকেই একাউন্ট আছে? লগইন করুন</button>
         </div>
     </div>
 
     <div id="dashboard-section" style="display:none;">
         
         <div id="unverified-warning" class="card" style="background:rgba(245, 158, 11, 0.15); border:1px solid #f59e0b; color:#fbbf24; display:none;">
-            ⚠️ <b>একাউন্ট আনভেরিফাইড!</b> সকল অপশন (কাজ, উইথড্র, টিম) ব্যবহার করতে ৳110 দিয়ে একাউন্ট ভেরিফাই করুন।
+            ⚠️ <b>একাউন্ট আনভেরিফাইড!</b> সকল অপশন (কাজ, উইথড্র, টিম) ব্যবহার করতে ৳৫০০ দিয়ে একাউন্ট ভেরিফাই করুন।
         </div>
 
         <div id="tab-home" class="tab-content">
@@ -571,7 +595,7 @@
             <div class="card">
                 <h3 style="color:#fff; margin-bottom:10px;">একাউন্ট ভেরিফিকেশন (৩০ দিন)</h3>
                 <div id="verify-error" class="error-msg-box"></div>
-                <p style="font-size:13px; color:#9ca3af; margin: 8px 0;">নিচের বিকাশ নম্বরে ৳110 Send Money করুন এবং TrxID নিচে লিখুন:</p>
+                <p style="font-size:13px; color:#9ca3af; margin: 8px 0;">নিচের বিকাশ নম্বরে ৳৫০০ Send Money করুন এবং TrxID নিচে লিখুন:</p>
                 <p style="background:rgba(255,255,255,0.08); padding:12px; border-radius:8px; font-weight:bold; text-align:center; color:#ffd700; font-size:18px;" id="verify-bkash-num">013637839238</p>
                 
                 <label style="margin-top:12px; display:block;">আপনার বিকাশ নম্বর</label>
@@ -580,7 +604,6 @@
                 <input type="text" id="v-trx" placeholder="9X87YYZZ">
                 <button class="btn" onclick="submitVerification()">ভেরিফিকেশন সাবমিট করুন</button>
 
-                <!-- নতুন যুক্ত করা বাটনসমূহ -->
                 <a href="YOUR_TUTORIAL_LINK" target="_blank" class="btn btn-tutorial" style="margin-top: 12px;">▶️ কিভাবে কাজ করবেন (টিউটোরিয়াল)</a>
                 <a href="YOUR_SUPPORT_LINK" target="_blank" class="btn btn-support" style="margin-top: 8px;">💬 এডমিন সাপোর্ট (Telegram)</a>
             </div>
@@ -600,7 +623,7 @@
                 <div class="job-reward-banner">
                     <div class="reward-info-left">
                         <small>টাস্ক রিওয়ার্ড বোনাস</small>
-                        <span>৳15.০০</span>
+                        <span>৳৫০.০০</span>
                     </div>
                     <div class="reward-icon-chip">💎</div>
                 </div>
@@ -616,7 +639,7 @@
                     <input type="text" id="job-ans" placeholder="সঠিক উত্তর এখানে লিখুন..." autocomplete="off">
                 </div>
 
-                <button class="btn btn-luxury-submit" onclick="submitJob()">✨ উত্তর জমা দিয়ে ৳15 নিন</button>
+                <button class="btn btn-luxury-submit" onclick="submitJob()">✨ উত্তর জমা দিয়ে ৳৫০ নিন</button>
             </div>
         </div>
 
@@ -681,7 +704,6 @@
 <script src="app.js"></script>
 
 <script>
-    // Animation Control Logic
     function triggerTabWithAnimation(tabName, overlayId) {
         const menu = document.getElementById('more-menu');
         if (menu) menu.classList.remove('show');
