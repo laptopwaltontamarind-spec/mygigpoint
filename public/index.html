@@ -10,7 +10,6 @@
         body { background-color: #0b0f19; color: #f3f4f6; padding-bottom: 80px; overflow-x: hidden; touch-action: pan-y; }
         .container { max-width: 480px; margin: 0 auto; padding: 15px; }
         
-        /* কাস্টম ব্লু ও মডার্ন থিম কার্ড */
         .card { background: #161f30; padding: 22px; border-radius: 16px; margin-bottom: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); border: 1px solid rgba(255, 255, 255, 0.05); }
         .auth-card { background: #182232; border: 1px solid rgba(24, 119, 242, 0.2); text-align: center; }
         .auth-card h2 { color: #1877f2; margin-bottom: 8px; font-size: 24px; font-weight: 800; }
@@ -23,6 +22,16 @@
         .btn-support { background: linear-gradient(135deg, #25d366, #128c7e); }
         .btn-secondary { background: rgba(255, 255, 255, 0.1); color: #fff; margin-top: 15px; border: 1px solid rgba(255, 255, 255, 0.15); }
         
+        .forgot-link {
+            display: inline-block;
+            margin-top: 12px;
+            color: #38bdf8;
+            font-size: 13px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .forgot-link:hover { text-decoration: underline; }
+
         .error-msg-box {
             display: none;
             color: #ff4d4d;
@@ -491,7 +500,7 @@
 <div class="container">
 
     <div id="auth-section">
-        <!-- মডার্ন প্রফেশনাল লগইন কার্ড -->
+        <!-- লগইন ফর্ম -->
         <div id="login-form" class="card auth-card">
             <h2>লগইন করুন</h2>
             <p class="auth-subtext">আপনার অ্যাকাউন্টে প্রবেশ করতে তথ্য দিন</p>
@@ -506,10 +515,27 @@
             
             <button class="btn" onclick="login()">লগইন করুন</button>
             
+            <a href="#" class="forgot-link" onclick="showResetPassword()">পাসওয়ার্ড ভুলে গেছেন?</a>
+            
             <button class="btn btn-secondary" onclick="showRegister()">নতুন অ্যাকাউন্ট তৈরি করুন</button>
         </div>
 
-        <!-- মডার্ন প্রফেশনাল রেজিস্ট্রেশন কার্ড -->
+        <!-- পাসওয়ার্ড রিসেট ফর্ম -->
+        <div id="reset-password-form" class="card auth-card" style="display:none;">
+            <h2>পাসওয়ার্ড রিসেট</h2>
+            <p class="auth-subtext">আপনার নিবন্ধিত মোবাইল নম্বর দিন</p>
+
+            <div id="reset-error" class="error-msg-box"></div>
+            
+            <label>মোবাইল নম্বর</label>
+            <input type="text" id="reset-mobile" placeholder="017xxxxxxxx">
+            
+            <button class="btn" onclick="resetPassword()">রিসেট করার নির্দেশিকা পাঠান</button>
+            
+            <button class="btn btn-secondary" onclick="showLogin()">লগইন পেজে ফিরে যান</button>
+        </div>
+
+        <!-- রেজিস্ট্রেশন ফর্ম -->
         <div id="register-form" class="card auth-card" style="display:none;">
             <h2>রেজিস্ট্রেশন করুন</h2>
             <p class="auth-subtext">নতুন অ্যাকাউন্ট খুলতে নিচের ফর্মটি পূরণ করুন</p>
@@ -704,6 +730,25 @@
 <script src="app.js"></script>
 
 <script>
+    // ফর্ম সুইচার ফাংশনসমূহ
+    function showResetPassword() {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('register-form').style.display = 'none';
+        document.getElementById('reset-password-form').style.display = 'block';
+    }
+
+    function showLogin() {
+        document.getElementById('reset-password-form').style.display = 'none';
+        document.getElementById('register-form').style.display = 'none';
+        document.getElementById('login-form').style.display = 'block';
+    }
+
+    function showRegister() {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('reset-password-form').style.display = 'none';
+        document.getElementById('register-form').style.display = 'block';
+    }
+
     function triggerTabWithAnimation(tabName, overlayId) {
         const menu = document.getElementById('more-menu');
         if (menu) menu.classList.remove('show');
