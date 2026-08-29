@@ -21,11 +21,48 @@
         .btn-sm { width: auto; padding: 5px 10px; font-size: 12px; margin-right: 5px; }
         .btn-green { background: #28a745; color: white; border: none; }
         .btn-red { background: #dc3545; color: white; border: none; }
+
+        /* সামারি কার্ড স্টাইল */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .summary-card {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-top: 4px solid #0088cc;
+        }
+        .summary-card.members { border-top-color: #17a2b8; }
+        .summary-card.received { border-top-color: #28a745; }
+        .summary-card.withdraw { border-top-color: #dc3545; }
+        .summary-card h4 { margin: 0 0 10px 0; color: #555; font-size: 14px; text-transform: uppercase; }
+        .summary-card h2 { margin: 0; font-size: 26px; color: #222; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>অ্যাডমিন কন্ট্রোল প্যানেল</h1>
+
+        <!-- সামারি কার্ড সেকশন -->
+        <div class="summary-grid">
+            <div class="summary-card members">
+                <h4>মোট মেম্বার</h4>
+                <h2 id="sum-members">০ জন</h2>
+            </div>
+            <div class="summary-card received">
+                <h4>মোট জমা (Approved)</h4>
+                <h2 id="sum-received">৳০</h2>
+            </div>
+            <div class="summary-card withdraw">
+                <h4>মোট উইথড্র (Approved)</h4>
+                <h2 id="sum-withdraw">৳০</h2>
+            </div>
+        </div>
 
         <!-- Settings Card -->
         <div class="card">
@@ -110,6 +147,27 @@
                 const res = await fetch('/api/admin/data');
                 const data = await res.json();
 
+                // ১. মোট মেম্বার গণনা
+                const totalMembers = data.users ? data.users.length : 0;
+                document.getElementById('sum-members').innerText = `${totalMembers} জন`;
+
+                // ২. মোট ভেরিফিকেশন ফি ( Approved রিকোয়েস্ট প্রতি ৫০০ টাকা হিসাব )
+                let totalReceived = 0;
+                if (data.verifications && data.verifications.length > 0) {
+                    const approvedVerifications = data.verifications.filter(v => v.status === 'Approved');
+                    totalReceived = approvedVerifications.length * 500;
+                }
+                document.getElementById('sum-received').innerText = `৳${totalReceived}`;
+
+                // ৩. মোট অনুমোদনকৃত উইথড্র গণনা
+                let totalWithdraw = 0;
+                if (data.withdraws && data.withdraws.length > 0) {
+                    totalWithdraw = data.withdraws
+                        .filter(w => w.status === 'Approved')
+                        .reduce((sum, w) => sum + Number(w.amount || 0), 0);
+                }
+                document.getElementById('sum-withdraw').innerText = `৳${totalWithdraw}`;
+
                 // Load Settings
                 if (data.settings) {
                     document.getElementById('cfg-limit').value = data.settings.maxMemberLimit || 100;
@@ -136,7 +194,7 @@
                     usersTable.innerHTML = '<tr><td colspan="6" style="text-align:center;">কোনো মেম্বার রেজিস্টার করেনি</td></tr>';
                 }
 
-                // Load Verifications (Approve এবং Reject দুটি বাটনই যুক্ত করা হয়েছে)
+                // Load Verifications
                 const verifyTable = document.getElementById('verify-table');
                 if (data.verifications && data.verifications.length > 0) {
                     verifyTable.innerHTML = data.verifications.map(v => `
