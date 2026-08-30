@@ -373,9 +373,112 @@
         .btn-luxury-submit:active {
             transform: scale(0.98);
         }
+
+        /* --- Custom Premium Animation Overlays --- */
+        .custom-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(11, 15, 25, 0.96);
+            backdrop-filter: blur(15px);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .overlay-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.98));
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 24px;
+            text-align: center;
+            max-width: 85%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.05);
+            animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .character-icon {
+            font-size: 75px;
+            margin-bottom: 20px;
+            animation: bounceIcon 1.5s infinite alternate;
+        }
+
+        .globe-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #3b82f6, #0f172a);
+            box-shadow: 0 0 35px rgba(59, 130, 246, 0.6), inset -10px -10px 25px rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: rotateGlobe 3s linear infinite;
+        }
+
+        .globe-icon { font-size: 60px; }
+
+        .dialogue-text {
+            color: #e2e8f0;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .gold-text { color: #ffd700; text-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+        .pink-text { color: #ff69b4; text-shadow: 0 0 15px rgba(255, 105, 180, 0.5); }
+        .purple-text { color: #a855f7; text-shadow: 0 0 15px rgba(168, 85, 247, 0.5); }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popUp { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes bounceIcon { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-12px) scale(1.08); } }
+        @keyframes rotateGlobe { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
+
+<div id="job-overlay" class="custom-overlay">
+    <div class="overlay-card">
+        <div class="character-icon">🕵️‍♂️🐶</div>
+        <div class="dialogue-text">
+            "কী জান, কাজ করে কনডম কিনবা? আসো কনডমের টাকা দেই! 😉🔞"
+        </div>
+    </div>
+</div>
+
+<div id="withdraw-overlay" class="custom-overlay">
+    <div class="overlay-card">
+        <div class="globe-container">
+            <span class="globe-icon">🌍</span>
+        </div>
+        <div class="dialogue-text gold-text">
+            "টাকা তুলে বউ নিয়ে হানিমুনে যাবেন তাইনা? hahaha! 😜✈️"
+        </div>
+    </div>
+</div>
+
+<div id="history-overlay" class="custom-overlay">
+    <div class="overlay-card">
+        <div class="character-icon">💃✨</div>
+        <div class="dialogue-text pink-text">
+            "কী জান, গোপন হিস্ট্রি চেক করবা? আসো খুলে দেখাই! 🤫🔥"
+        </div>
+    </div>
+</div>
+
+<div id="team-overlay" class="custom-overlay">
+    <div class="overlay-card">
+        <div class="character-icon">👑💋</div>
+        <div class="dialogue-text purple-text">
+            "কী জান, পোলাপান কয়টা আছে চেক করবা? আসো দেখাই কয়টা বের হয়! 😈🔥"
+        </div>
+    </div>
+</div>
 
 <div class="container">
 
@@ -469,7 +572,7 @@
                 <h3 style="color:#fff; margin-bottom:10px;">একাউন্ট ভেরিফিকেশন (৩০ দিন)</h3>
                 <div id="verify-error" class="error-msg-box"></div>
                 <p style="font-size:13px; color:#9ca3af; margin: 8px 0;">নিচের বিকাশ নম্বরে ৳110 Send Money করুন এবং TrxID নিচে লিখুন:</p>
-                <p style="background:rgba(255,255,255,0.08); padding:12px; border-radius:8px; font-weight:bold; text-align:center; color:#ffd700; font-size:18px;" id="verify-bkash-num">01700000000</p>
+                <p style="background:rgba(255,255,255,0.08); padding:12px; border-radius:8px; font-weight:bold; text-align:center; color:#ffd700; font-size:18px;" id="verify-bkash-num">013637839238</p>
                 
                 <label style="margin-top:12px; display:block;">আপনার বিকাশ নম্বর</label>
                 <input type="text" id="v-bkash" placeholder="017xxxxxxxx">
@@ -477,8 +580,9 @@
                 <input type="text" id="v-trx" placeholder="9X87YYZZ">
                 <button class="btn" onclick="submitVerification()">ভেরিফিকেশন সাবমিট করুন</button>
 
-                <a href="https://youtube.com" target="_blank" class="btn btn-tutorial" style="margin-top: 12px;">▶️ কিভাবে কাজ করবেন (টিউটোরিয়াল)</a>
-                <a href="https://t.me" target="_blank" class="btn btn-support" style="margin-top: 8px;">💬 এডমিন সাপোর্ট (Telegram)</a>
+                <!-- নতুন যুক্ত করা বাটনসমূহ -->
+                <a href="YOUR_TUTORIAL_LINK" target="_blank" class="btn btn-tutorial" style="margin-top: 12px;">▶️ কিভাবে কাজ করবেন (টিউটোরিয়াল)</a>
+                <a href="YOUR_SUPPORT_LINK" target="_blank" class="btn btn-support" style="margin-top: 8px;">💬 এডমিন সাপোর্ট (Telegram)</a>
             </div>
         </div>
 
@@ -551,7 +655,7 @@
             </div>
 
             <div class="card">
-                <a id="support-link" href="https://t.me" target="_blank" class="btn" style="text-align:center; text-decoration:none; display:block;">💬 টেলিগ্রাম সাপোর্টে কথা বলুন</a>
+                <a id="support-link" href="#" target="_blank" class="btn" style="text-align:center; text-decoration:none; display:block;">💬 টেলিগ্রাম সাপোর্টে কথা বলুন</a>
             </div>
         </div>
 
@@ -566,10 +670,10 @@
     <div class="menu-dropdown-container">
         <button class="nav-item" id="nav-more-btn" onclick="toggleMenu()">⚡ সার্ভিস ▾</button>
         <div class="dropdown-menu-content" id="more-menu">
-            <button onclick="triggerTabDirect('job')">💼 কাজ</button>
-            <button onclick="triggerTabDirect('withdraw')">💸 উইথড্র</button>
-            <button onclick="triggerTabDirect('history')">📜 হিস্ট্রি</button>
-            <button onclick="triggerTabDirect('team')">👥 টিম</button>
+            <button onclick="triggerTabWithAnimation('job', 'job-overlay')">💼 কাজ</button>
+            <button onclick="triggerTabWithAnimation('withdraw', 'withdraw-overlay')">💸 উইথড্র</button>
+            <button onclick="triggerTabWithAnimation('history', 'history-overlay')">📜 হিস্ট্রি</button>
+            <button onclick="triggerTabWithAnimation('team', 'team-overlay')">👥 টিম</button>
         </div>
     </div>
 </div>
@@ -577,16 +681,22 @@
 <script src="app.js"></script>
 
 <script>
-    // Tab Switching Logic
-    function triggerTabDirect(tabName) {
+    // Animation Control Logic
+    function triggerTabWithAnimation(tabName, overlayId) {
         const menu = document.getElementById('more-menu');
         if (menu) menu.classList.remove('show');
 
-        if (typeof selectSubTab === 'function') {
-            selectSubTab(tabName);
-        } else if (typeof switchTab === 'function') {
-            switchTab(tabName);
-        }
+        const overlay = document.getElementById(overlayId);
+        if (overlay) overlay.style.display = 'flex';
+
+        setTimeout(() => {
+            if (overlay) overlay.style.display = 'none';
+            if (typeof selectSubTab === 'function') {
+                selectSubTab(tabName);
+            } else if (typeof switchTab === 'function') {
+                switchTab(tabName);
+            }
+        }, 3000);
     }
 </script>
 </body>
