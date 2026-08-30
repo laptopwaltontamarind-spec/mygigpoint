@@ -153,7 +153,7 @@ app.post('/api/submit-job', async (req, res) => {
     if (!user) return res.status(404).json({ success: false, message: "ইউজার পাওয়া যায়নি" });
 
     if (!user.isVerified) {
-        return res.status(400).json({ success: false, message: "কাজ করতে আগে ৳৫০০ দিয়ে একাউন্ট ভেরিফাই করুন!" });
+        return res.status(400).json({ success: false, message: "কাজ করতে আগে ৳110 দিয়ে একাউন্ট ভেরিফাই করুন!" });
     }
 
     const todayStr = new Date().toISOString().split('T')[0];
@@ -176,7 +176,7 @@ app.post('/api/withdraw', async (req, res) => {
     const { userId, paymentNumber, amount } = req.body;
     
     if (amount < 300) {
-        return res.status(400).json({ success: false, message: "সর্বনিম্ন উইথড্র ৳৩০০" });
+        return res.status(400).json({ success: false, message: "সর্বনিম্ন উইথড্র ৳100" });
     }
 
     const user = await User.findById(userId);
