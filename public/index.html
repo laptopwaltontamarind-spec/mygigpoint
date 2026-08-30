@@ -664,7 +664,7 @@
 </div>
 
 <div class="navbar" id="app-nav" style="display:none;">
-    <button class="nav-item active" onclick="switchTab('home')">🏠 হোম</button>
+    <button class="nav-item active" id="nav-home-btn" onclick="switchTab('home')">🏠 হোম</button>
     <button class="nav-item" id="nav-verify-btn" onclick="switchTab('verify')">✅ ভেরিফাই</button>
     
     <div class="menu-dropdown-container">
@@ -678,9 +678,375 @@
     </div>
 </div>
 
-<script src="app.js"></script>
-
 <script>
+    // System Data & State Management
+    let currentUser = null;
+    let currentTask = { num1: 0, num2: 0, answer: 0 };
+
+    // Initial Load Logic
+    window.addEventListener('DOMContentLoaded', () => {
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+        }
+
+        const savedUser = localStorage.getItem('app_current_user');
+        if (savedUser) {
+            currentUser = JSON.parse(savedUser);
+            showDashboard();
+        } else {
+            showLogin();
+        }
+    });
+
+    // Helper Functions
+    function showError(elementId, message) {
+        const el = document.getElementById(elementId);
+        if (el) {
+            el.innerText = message;
+            el.style.display = 'block';
+        }
+    }
+
+    function hideError(elementId) {
+        const el = document.getElementById(elementId);
+        if (el) {
+            el.innerText = '';
+            el.style.display = 'none';
+        }
+    }
+
+    function toggleMenu() {
+        const menu = document.getElementById('more-menu');
+        if (menu) {
+            menu.classList.toggle('show');
+        }
+    }
+
+    // Navigation & Auth Views
+    function showLogin() {
+        document.getElementById('auth-section').style.display = 'block';
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('register-form').style.display = 'none';
+        document.getElementById('dashboard-section').style.display = 'none';
+        document.getElementById('app-nav').style.display = 'none';
+        hideError('login-error');
+    }
+
+    function showRegister() {
+        document.getElementById('auth-section').style.display = 'block';
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('register-form').style.display = 'block';
+        document.getElementById('dashboard-section').style.display = 'none';
+        document.getElementById('app-nav').style.display = 'none';
+        hideError('register-error');
+    }
+
+    function showDashboard() {
+        document.getElementById('auth-section').style.display = 'none';
+        document.getElementById('dashboard-section').style.display = 'block';
+        document.getElementById('app-nav').style.display = 'flex';
+        updateUserData();
+        switchTab('home');
+    }
+
+    // User Operations
+    function register() {
+        hideError('register-error');
+        const name = document.getElementById('reg-name').value.trim();
+        const mobile = document.getElementById('reg-mobile').value.trim();
+        const ref = document.getElementById('reg-ref').value.trim();
+        const password = document.getElementById('reg-password').value.trim();
+
+        if (!name || !mobile || !password) {
+            showError('register-error', 'সকল ঘর সঠিকভাবে পূরণ করুন!');
+            return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('app_users') || '{}');
+        if (users[mobile]) {
+            showError('register-error', 'এই মোবাইল নম্বর দিয়ে অ্যাকাউন্ট খোলা আছে!');
+            return;
+        }
+
+        const newUser = {
+            name: name,
+            mobile: mobile,
+            password: password,
+            refCode: 'REF' + Math.floor(100000 + Math.random() * 900000),
+            referredBy: ref || null,
+            status: 'unverified',
+            balance: 0,
+            totalEarned: 0,
+            withdrawals: [],
+            team: [],
+            expireDate: null
+        };
+
+        if (ref) {
+            for (let m in users) {
+                if (users[m].refCode === ref) {
+                    users[m].team.push({ name: name, mobile: mobile, status: 'unverified' });
+                    break;
+                }
+            }
+        }
+
+        users[mobile] = newUser;
+        localStorage.setItem('app_users', JSON.stringify(users));
+        localStorage.setItem('app_current_user', JSON.stringify(newUser));
+        currentUser = newUser;
+        showDashboard();
+    }
+
+    function login() {
+        hideError('login-error');
+        const mobile = document.getElementById('login-mobile').value.trim();
+        const password = document.getElementById('login-password').value.trim();
+
+        if (!mobile || !password) {
+            showError('login-error', 'মোবাইল নম্বর ও পাসওয়ার্ড দিন!');
+            return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('app_users') || '{}');
+        const user = users[mobile];
+
+        if (user && user.password === password) {
+            currentUser = user;
+            localStorage.setItem('app_current_user', JSON.stringify(currentUser));
+            showDashboard();
+        } else {
+            showError('login-error', 'মোবাইল নম্বর অথবা পাসওয়ার্ড ভুল!');
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('app_current_user');
+        currentUser = null;
+        showLogin();
+    }
+
+    // Update UI Elements
+    function updateUserData() {
+        if (!currentUser) return;
+
+        const users = JSON.parse(localStorage.getItem('app_users') || '{}');
+        if (users[currentUser.mobile]) {
+            currentUser = users[currentUser.mobile];
+            localStorage.setItem('app_current_user', JSON.stringify(currentUser));
+        }
+
+        document.getElementById('u-name').innerText = currentUser.name || 'ইউজার';
+        document.getElementById('u-status').innerText = currentUser.status === 'verified' ? 'ভেরিফাইড' : 'আনভেরিফাইড';
+        document.getElementById('u-balance').innerText = currentUser.balance || 0;
+        document.getElementById('u-total-earned').innerText = currentUser.totalEarned || 0;
+        document.getElementById('u-refcode').innerText = currentUser.refCode || '---';
+
+        const warningBox = document.getElementById('unverified-warning');
+        if (currentUser.status === 'unverified') {
+            warningBox.style.display = 'block';
+        } else {
+            warningBox.style.display = 'none';
+        }
+
+        renderHistory();
+        renderTeam();
+    }
+
+    // Navigation Subtab Handler
+    function switchTab(tabName) {
+        const tabs = document.querySelectorAll('.tab-content');
+        tabs.forEach(tab => tab.style.display = 'none');
+
+        const activeTab = document.getElementById('tab-' + tabName);
+        if (activeTab) activeTab.style.display = 'block';
+
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => item.classList.remove('active'));
+
+        if (tabName === 'home') {
+            document.getElementById('nav-home-btn')?.classList.add('active');
+        } else if (tabName === 'verify') {
+            document.getElementById('nav-verify-btn')?.classList.add('active');
+        } else {
+            document.getElementById('nav-more-btn')?.classList.add('active');
+        }
+
+        if (tabName === 'job') {
+            generateMathTask();
+        }
+    }
+
+    function selectSubTab(tabName) {
+        switchTab(tabName);
+    }
+
+    // Feature Logic
+    function submitVerification() {
+        hideError('verify-error');
+        const bkash = document.getElementById('v-bkash').value.trim();
+        const trx = document.getElementById('v-trx').value.trim();
+
+        if (!bkash || !trx) {
+            showError('verify-error', 'বিকাশ নম্বর এবং TrxID প্রদান করুন!');
+            return;
+        }
+
+        currentUser.status = 'verified';
+        
+        // Bonus for referrer if applicable
+        if (currentUser.referredBy) {
+            const users = JSON.parse(localStorage.getItem('app_users') || '{}');
+            for (let m in users) {
+                if (users[m].refCode === currentUser.referredBy) {
+                    users[m].balance = (users[m].balance || 0) + 40;
+                    users[m].totalEarned = (users[m].totalEarned || 0) + 40;
+                    
+                    // Update team status in referrer's list
+                    if (users[m].team) {
+                        users[m].team.forEach(member => {
+                            if (member.mobile === currentUser.mobile) member.status = 'verified';
+                        });
+                    }
+                    break;
+                }
+            }
+            localStorage.setItem('app_users', JSON.stringify(users));
+        }
+
+        const users = JSON.parse(localStorage.getItem('app_users') || '{}');
+        users[currentUser.mobile] = currentUser;
+        localStorage.setItem('app_users', JSON.stringify(users));
+        localStorage.setItem('app_current_user', JSON.stringify(currentUser));
+
+        alert('ভেরিফিকেশন সাবমিট হয়েছে! আপনার একাউন্ট ভেরিফাইড করা হলো।');
+        updateUserData();
+        switchTab('home');
+    }
+
+    function generateMathTask() {
+        const num1 = Math.floor(Math.random() * 20) + 1;
+        const num2 = Math.floor(Math.random() * 20) + 1;
+        currentTask = { num1: num1, num2: num2, answer: num1 + num2 };
+        document.getElementById('job-q').innerText = `${num1} + ${num2} = ?`;
+        document.getElementById('job-ans').value = '';
+        hideError('job-error');
+    }
+
+    function submitJob() {
+        hideError('job-error');
+        if (currentUser.status !== 'verified') {
+            showError('job-error', 'কাজ জমা দেওয়ার জন্য একাউন্ট ভেরিফাই করুন!');
+            return;
+        }
+
+        const userAns = parseInt(document.getElementById('job-ans').value.trim(), 10);
+        if (isNaN(userAns) || userAns !== currentTask.answer) {
+            showError('job-error', 'ভুল উত্তর! সঠিক উত্তর দিয়ে চেষ্টা করুন।');
+            return;
+        }
+
+        currentUser.balance = (currentUser.balance || 0) + 15;
+        currentUser.totalEarned = (currentUser.totalEarned || 0) + 15;
+
+        const users = JSON.parse(localStorage.getItem('app_users') || '{}');
+        users[currentUser.mobile] = currentUser;
+        localStorage.setItem('app_users', JSON.stringify(users));
+        localStorage.setItem('app_current_user', JSON.stringify(currentUser));
+
+        alert('অভিনন্দন! আপনি ৳15 বোনাস পেয়েছেন।');
+        updateUserData();
+        generateMathTask();
+    }
+
+    function submitWithdraw() {
+        hideError('withdraw-error');
+        if (currentUser.status !== 'verified') {
+            showError('withdraw-error', 'উইথড্র করতে একাউন্ট ভেরিফাই করুন!');
+            return;
+        }
+
+        const num = document.getElementById('w-number').value.trim();
+        const amount = parseFloat(document.getElementById('w-amount').value.trim());
+
+        if (!num || isNaN(amount) || amount < 50) {
+            showError('withdraw-error', 'সর্বনিম্ন ৳৫০ এবং সঠিক নম্বর প্রদান করুন!');
+            return;
+        }
+
+        if (amount > currentUser.balance) {
+            showError('withdraw-error', 'আপনার পর্যাপ্ত ব্যালেন্স নেই!');
+            return;
+        }
+
+        currentUser.balance -= amount;
+        currentUser.withdrawals = currentUser.withdrawals || [];
+        currentUser.withdrawals.push({
+            date: new Date().toLocaleDateString('bn-BD'),
+            amount: amount,
+            status: 'Pending'
+        });
+
+        const users = JSON.parse(localStorage.getItem('app_users') || '{}');
+        users[currentUser.mobile] = currentUser;
+        localStorage.setItem('app_users', JSON.stringify(users));
+        localStorage.setItem('app_current_user', JSON.stringify(currentUser));
+
+        alert('উইথড্র রিকোয়েস্ট সফল হয়েছে!');
+        document.getElementById('w-number').value = '';
+        document.getElementById('w-amount').value = '';
+        updateUserData();
+        switchTab('history');
+    }
+
+    function renderHistory() {
+        const tbody = document.getElementById('withdraw-history');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        const list = currentUser.withdrawals || [];
+        if (list.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">কোন রেকর্ড নেই</td></tr>';
+            return;
+        }
+
+        list.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${item.date}</td>
+                <td>৳${item.amount}</td>
+                <td><span class="badge bg-pending">${item.status}</span></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function renderTeam() {
+        const tbody = document.getElementById('team-list');
+        const count = document.getElementById('team-count');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        const team = currentUser.team || [];
+        if (count) count.innerText = team.length;
+
+        if (team.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">কোন রেফারাল নেই</td></tr>';
+            return;
+        }
+
+        team.forEach(member => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${member.name}</td>
+                <td>${member.mobile}</td>
+                <td><span class="badge ${member.status === 'verified' ? 'bg-approved' : 'bg-pending'}">${member.status === 'verified' ? 'ভেরিফাইড' : 'আনভেরিফাইড'}</span></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
     // Animation Control Logic
     function triggerTabWithAnimation(tabName, overlayId) {
         const menu = document.getElementById('more-menu');
