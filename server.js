@@ -353,4 +353,4 @@ const MONGO_URI = process.env.MONGODB_URI || 'mongodb+srv://laptopwaltontamarind
 
 mongoose.connect(MONGO_URI)
     .then(() => app.listen(PORT, () => console.log(`Server running on port ${PORT}`)))
-    .catch(err => console.log('Database Error:', err)); ata amar server file
+    .catch(err => console.log('Database Error:', err)); 
