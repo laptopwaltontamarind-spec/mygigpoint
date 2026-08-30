@@ -15,7 +15,7 @@ const SettingsSchema = new mongoose.Schema({
     verificationBkashNumber: { type: String, default: "013637839238" },
     dailyJobQuestion: { type: String, default: "45 + 55 = ?" },
     dailyJobAnswer: { type: String, default: "100" },
-    dailyJobReward: { type: Number, default: 12 }, // 👈 টাস্ক বোনাস 12 টাকা
+    dailyJobReward: { type: Number, default: 12 }, // 👈 টাস্ক বোনাস ১২ টাকা
     supportTelegram: { type: String, default: "@AdminSupport" }
 });
 const Settings = mongoose.model('Settings', SettingsSchema);
@@ -38,7 +38,7 @@ const VerificationSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     bkashSender: String,
     trxId: String,
-    amount: { type: Number, default: 110 },
+    amount: { type: Number, default: 110 }, // 👈 ভেরিফিকেশন ফি ১১০ টাকা
     status: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' },
     createdAt: { type: Date, default: Date.now }
 });
@@ -147,7 +147,8 @@ app.post('/api/reset-password-request', async (req, res) => {
 app.post('/api/verify-request', async (req, res) => {
     try {
         const { userId, bkashSender, trxId } = req.body;
-        const newReq = new Verification({ userId, bkashSender, trxId });
+        // 🎯 110 টাকা সরাসরি অ্যামাউন্ট হিসেবে সেভ করা
+        const newReq = new Verification({ userId, bkashSender, trxId, amount: 110 });
         await newReq.save();
         res.json({ success: true, message: "ভেরিফিকেশন রিকোয়েস্ট পাঠানো হয়েছে!" });
     } catch (err) {
@@ -176,7 +177,7 @@ app.post('/api/submit-job', async (req, res) => {
             return res.status(400).json({ success: false, message: "উত্তর ভুল হয়েছে! আবার চেষ্টা করুন।" });
         }
 
-        // 🎯 টাস্ক কমপ্লিট বোনাস ১৫ টাকা নিশ্চিত করা
+        // 🎯 টাস্ক কমপ্লিট বোনাস ১২ টাকা নিশ্চিত করা
         const reward = settings.dailyJobReward || 12;
         user.balance += reward;
         user.lastJobCompletedDate = todayStr;
@@ -193,7 +194,7 @@ app.post('/api/withdraw', async (req, res) => {
         const { userId, paymentNumber, amount } = req.body;
         const numAmount = Number(amount);
         
-        // 🎯 সর্বনিম্ন উইথড্র সীমা ১০০ টাকা করা হলো
+        // 🎯 সর্বনিম্ন উইথড্র সীমা ১০০ টাকা
         if (isNaN(numAmount) || numAmount < 100) {
             return res.status(400).json({ success: false, message: "সর্বনিম্ন উইথড্র ৳১০০" });
         }
@@ -265,7 +266,7 @@ app.post('/api/admin/update-settings', async (req, res) => {
             settings.dailyJobAnswer = dailyJobAnswer;
             settings.verificationBkashNumber = verificationBkashNumber;
             settings.supportTelegram = supportTelegram;
-            settings.dailyJobReward = dailyJobReward || 15;
+            settings.dailyJobReward = dailyJobReward || 12; // 👈 ১২ টাকা রাখা হয়েছে
             await settings.save();
         }
         res.json({ success: true, message: "সেটিংস আপডেট হয়েছে!" });
