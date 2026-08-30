@@ -15,7 +15,7 @@ const SettingsSchema = new mongoose.Schema({
     verificationBkashNumber: { type: String, default: "013637839238" },
     dailyJobQuestion: { type: String, default: "45 + 55 = ?" },
     dailyJobAnswer: { type: String, default: "100" },
-    dailyJobReward: { type: Number, default: 15 }, // 👈 টাস্ক বোনাস ১৫ টাকা
+    dailyJobReward: { type: Number, default: 12 }, // 👈 টাস্ক বোনাস ১৫ টাকা
     supportTelegram: { type: String, default: "@AdminSupport" }
 });
 const Settings = mongoose.model('Settings', SettingsSchema);
@@ -177,7 +177,7 @@ app.post('/api/submit-job', async (req, res) => {
         }
 
         // 🎯 টাস্ক কমপ্লিট বোনাস ১৫ টাকা নিশ্চিত করা
-        const reward = settings.dailyJobReward || 15;
+        const reward = settings.dailyJobReward || 12;
         user.balance += reward;
         user.lastJobCompletedDate = todayStr;
         await user.save();
