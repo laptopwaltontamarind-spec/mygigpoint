@@ -83,7 +83,7 @@
 </head>
 <body>
 
-    <!-- পাসওয়ার্ড ভেরিফিকেশন পপআপ (Login Overlay) -->
+    <!-- পাসওয়ার্ড ভেরিফিকেশন পপআপ -->
     <div id="login-overlay">
         <div class="login-box">
             <h2>🔒 অ্যাডমিন সিকিউরিটি</h2>
@@ -94,7 +94,7 @@
         </div>
     </div>
 
-    <!-- মূল অ্যাডমিন প্যানেল কন্টেন্ট (প্রথমে হাইড থাকবে) -->
+    <!-- মূল অ্যাডমিন প্যানেল কন্টেন্ট -->
     <div class="container" id="admin-dashboard" style="display: none;">
         <header>
             <h1>অ্যাডমিন কন্ট্রোল সেন্টার</h1>
@@ -199,10 +199,8 @@
     </div>
 
     <script>
-        // 🔑 আপনার সিক্রেট পাসওয়ার্ড এখানে সেট করুন
         const ADMIN_SECRET = "adminSHYKOT"; 
 
-        // পেজ লোড হওয়ার পর সিকিউরিটি চেক
         document.addEventListener("DOMContentLoaded", () => {
             const isAuth = sessionStorage.getItem("adminAuth");
             if (isAuth === "true") {
@@ -210,7 +208,6 @@
             }
         });
 
-        // পাসওয়ার্ড ভেরিফিকেশন
         function verifyAdminPass() {
             const inputPass = document.getElementById("admin-pass-input").value;
             const errorElem = document.getElementById("pass-error");
@@ -224,30 +221,25 @@
             }
         }
 
-        // ড্যাশবোর্ড আনলক করা ও ডাটা লোড
         function unlockDashboard() {
             document.getElementById("login-overlay").style.display = "none";
             document.getElementById("admin-dashboard").style.display = "block";
             loadAdminData();
         }
 
-        // লগআউট
         function adminLogout() {
             sessionStorage.removeItem("adminAuth");
             location.reload();
         }
 
-        // ডাটা লোডিং লজিক
         async function loadAdminData() {
             try {
                 const res = await fetch('/api/admin/data');
                 const data = await res.json();
 
-                // ১. মোট মেম্বার
                 const totalMembers = data.users ? data.users.length : 0;
                 document.getElementById('sum-members').innerText = `${totalMembers} জন`;
 
-                // ২. মোট জমা (Approved Verification)
                 let totalReceived = 0;
                 if (data.verifications) {
                     const approved = data.verifications.filter(v => v.status && v.status.toLowerCase() === 'approved');
@@ -255,7 +247,6 @@
                 }
                 document.getElementById('sum-received').innerText = `৳${totalReceived}`;
 
-                // ৩. মোট উইথড্র (Approved Withdraw)
                 let totalWithdraw = 0;
                 if (data.withdraws) {
                     totalWithdraw = data.withdraws
@@ -264,7 +255,6 @@
                 }
                 document.getElementById('sum-withdraw').innerText = `৳${totalWithdraw}`;
 
-                // Settings
                 if (data.settings) {
                     document.getElementById('cfg-limit').value = data.settings.maxMemberLimit || 100;
                     document.getElementById('cfg-bkash').value = data.settings.verificationBkashNumber || '';
@@ -273,7 +263,6 @@
                     document.getElementById('cfg-job-a').value = data.settings.dailyJobAnswer || '';
                 }
 
-                // Users Table
                 const usersTable = document.getElementById('users-table');
                 if (data.users && data.users.length > 0) {
                     usersTable.innerHTML = data.users.map(u => `
@@ -290,7 +279,6 @@
                     usersTable.innerHTML = '<tr><td colspan="6" style="text-align:center;">কোনো মেম্বার পাওয়া যায়নি</td></tr>';
                 }
 
-                // Verifications Table (স্ট্যাটাস অনুযায়ী বাটন ও ব্যাজ ফিল্টারিং)
                 const verifyTable = document.getElementById('verify-table');
                 if (data.verifications && data.verifications.length > 0) {
                     verifyTable.innerHTML = data.verifications.map(v => {
@@ -306,10 +294,10 @@
                             `;
                         } else if (status === 'approved') {
                             statusBadge = '<span style="color: #22c55e; font-weight: bold;">✅ Approved</span>';
-                            actionButtons = '<span style="color: #94a3b8; font-size: 13px;">সম্পন্ন হয়েছে</span>';
+                            actionButtons = '<span style="color: #94a3b8; font-size: 13px;">সম্পন্ন হয়েছে</span>';
                         } else if (status === 'rejected') {
                             statusBadge = '<span style="color: #ef4444; font-weight: bold;">❌ Rejected</span>';
-                            actionButtons = '<span style="color: #ef4444; font-size: 13px;">বাতিল করা হয়েছে</span>';
+                            actionButtons = '<span style="color: #ef4444; font-size: 13px;">বাতিল করা হয়েছে</span>';
                         } else {
                             statusBadge = `<b>${v.status}</b>`;
                             actionButtons = '-';
@@ -329,7 +317,6 @@
                     verifyTable.innerHTML = '<tr><td colspan="5" style="text-align:center;">কোনো ভেরিফিকেশন রিকোয়েস্ট নেই</td></tr>';
                 }
 
-                // Withdraws Table (স্ট্যাটাস অনুযায়ী বাটন ও ব্যাজ ফিল্টারিং)
                 const withdrawTable = document.getElementById('withdraw-table');
                 if (data.withdraws && data.withdraws.length > 0) {
                     withdrawTable.innerHTML = data.withdraws.map(w => {
@@ -345,10 +332,10 @@
                             `;
                         } else if (status === 'approved') {
                             statusBadge = '<span style="color: #22c55e; font-weight: bold;">✅ Approved</span>';
-                            actionButtons = '<span style="color: #94a3b8; font-size: 13px;">সম্পন্ন হয়েছে</span>';
+                            actionButtons = '<span style="color: #94a3b8; font-size: 13px;">সম্পন্ন হয়েছে</span>';
                         } else if (status === 'rejected') {
                             statusBadge = '<span style="color: #ef4444; font-weight: bold;">❌ Rejected</span>';
-                            actionButtons = '<span style="color: #ef4444; font-size: 13px;">বাতিল করা হয়েছে</span>';
+                            actionButtons = '<span style="color: #ef4444; font-size: 13px;">বাতিল করা হয়েছে</span>';
                         } else {
                             statusBadge = `<b>${w.status}</b>`;
                             actionButtons = '-';
