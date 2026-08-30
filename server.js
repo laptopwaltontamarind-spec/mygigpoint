@@ -224,7 +224,7 @@ app.get('/api/admin/dashboard-summary', async (req, res) => {
     try {
         const totalMembers = await User.countDocuments();
 
-        // ৩. সরাসরি Approved হওয়া ডকুমেন্টের সংখ্যা × ১১০ হিসাব করা
+        // ৩. সরাসরি Approved হওয়া ডকুমেন্টের সংখ্যা × ১১০ হিসাব করা
         const approvedVerificationsCount = await Verification.countDocuments({ status: 'Approved' });
         const totalAmountReceived = approvedVerificationsCount * 110;
 
@@ -338,6 +338,20 @@ app.post('/api/admin/update-withdraw-status', async (req, res) => {
         res.json({ success: true, message: `উইথড্র স্ট্যাটাস ${status} করা হয়েছে!` });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+// ---------------- DATA RESET ENDPOINT (ডাটা মুছে ফেলার রুট) ---------------- //
+
+app.get('/api/admin/clear-all-data', async (req, res) => {
+    try {
+        await User.deleteMany({});
+        await Verification.deleteMany({});
+        await Withdraw.deleteMany({});
+        await ResetRequest.deleteMany({});
+        res.send("<h2 style='color:green;text-align:center;'>✅ ডাটাবেজের সব ইউজার, ভেরিফিকেশন ও উইথড্র ডাটা ক্লিয়ার করা হয়েছে!</h2>");
+    } catch (err) {
+        res.status(500).send("ডাটা ক্লিয়ার করতে সমস্যা হয়েছে: " + err.message);
     }
 });
 
