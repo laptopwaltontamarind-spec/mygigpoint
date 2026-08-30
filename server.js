@@ -147,6 +147,7 @@ app.post('/api/reset-password-request', async (req, res) => {
 app.post('/api/verify-request', async (req, res) => {
     try {
         const { userId, bkashSender, trxId } = req.body;
+        // ১. নিশ্চিত ভাবে ১১০ টাকা রিকোয়েস্টে সেট হবে
         const newReq = new Verification({ userId, bkashSender, trxId, amount: 110 });
         await newReq.save();
         res.json({ success: true, message: "ভেরিফিকেশন রিকোয়েস্ট পাঠানো হয়েছে!" });
@@ -176,7 +177,8 @@ app.post('/api/submit-job', async (req, res) => {
             return res.status(400).json({ success: false, message: "উত্তর ভুল হয়েছে! আবার চেষ্টা করুন।" });
         }
 
-        const reward = 12; // ফিক্সড ১২ টাকা টাস্ক বোনাস
+        // ২. সরাসরি ফিক্সড ১২ টাকা টাস্ক রিওয়ার্ড প্রদান
+        const reward = 12;
         user.balance += reward;
         user.lastJobCompletedDate = todayStr;
         await user.save();
@@ -222,6 +224,7 @@ app.get('/api/admin/dashboard-summary', async (req, res) => {
     try {
         const totalMembers = await User.countDocuments();
 
+        // ৩. সরাসরি Approved হওয়া ডকুমেন্টের সংখ্যা × ১১০ হিসাব করা
         const approvedVerificationsCount = await Verification.countDocuments({ status: 'Approved' });
         const totalAmountReceived = approvedVerificationsCount * 110;
 
@@ -263,7 +266,7 @@ app.post('/api/admin/update-settings', async (req, res) => {
             settings.dailyJobAnswer = dailyJobAnswer;
             settings.verificationBkashNumber = verificationBkashNumber;
             settings.supportTelegram = supportTelegram;
-            settings.dailyJobReward = 12;
+            settings.dailyJobReward = 12; // ১২ টাকা ফিক্সড
             await settings.save();
         }
         res.json({ success: true, message: "সেটিংস আপডেট হয়েছে!" });
@@ -300,6 +303,7 @@ app.post('/api/admin/approve-verification', async (req, res) => {
             user.verifiedExpireDate = expireDate;
             await user.save();
 
+            // রেফার করার জন্য রেফারার ৪০ টাকা বোনাস পাবে
             if (user.referralId) {
                 const referrer = await User.findOne({ ownReferralCode: user.referralId });
                 if (referrer) {
@@ -334,22 +338,6 @@ app.post('/api/admin/update-withdraw-status', async (req, res) => {
         res.json({ success: true, message: `উইথড্র স্ট্যাটাস ${status} করা হয়েছে!` });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
-    }
-});
-
-// ---------------- DATA RESET ENDPOINT ---------------- //
-
-// শুধুমাত্র মেম্বার এবং উইথড্র/ভেরিফিকেশন সংক্রান্ত ডাটা ডিলিট করার রুট (সেটিংস সেইভ থাকবে)
-app.get('/api/admin/clear-members-withdraws', async (req, res) => {
-    try {
-        await User.deleteMany({});
-        await Verification.deleteMany({});
-        await Withdraw.deleteMany({});
-        await ResetRequest.deleteMany({});
-
-        res.send("<div style='text-align:center; padding:50px; font-family:sans-serif;'><h1 style='color:green;'>✅ সকল মেম্বার ও উইথড্র রিকোয়েস্ট সফলভাবে মুছে ফেলা হয়েছে!</h1><p>আপনার সাইটের অন্যান্য সেটিংস (যেমন বিকাশ নম্বর, দৈনিক প্রশ্ন ইত্যাদি) ঠিক আছে।</p></div>");
-    } catch (err) {
-        res.status(500).send("ডাটা ডিলিট করতে সমস্যা হয়েছে: " + err.message);
     }
 });
 
