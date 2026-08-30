@@ -12,11 +12,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const SettingsSchema = new mongoose.Schema({
     maxMemberLimit: { type: Number, default: 100 },
-    verificationBkashNumber: { type: String, default: "01700000000" },
+    verificationBkashNumber: { type: String, default: "013637839238" },
     dailyJobQuestion: { type: String, default: "45 + 55 = ?" },
     dailyJobAnswer: { type: String, default: "100" },
-    dailyJobReward: { type: Number, default: 15 }, // 👈 এখানে সঠিকভাবে ১৫ টাকা সেট করা হলো
-    supportTelegram: { type: String, default: "https://t.me" }
+    dailyJobReward: { type: Number, default: 15 }, // 👈 টাস্ক বোনাস ১৫ টাকা
+    supportTelegram: { type: String, default: "@AdminSupport" }
 });
 const Settings = mongoose.model('Settings', SettingsSchema);
 
@@ -164,7 +164,7 @@ app.post('/api/submit-job', async (req, res) => {
         if (!user) return res.status(404).json({ success: false, message: "ইউজার পাওয়া যায়নি" });
 
         if (!user.isVerified) {
-            return res.status(400).json({ success: false, message: "কাজ করতে আগে ৳১১০ দিয়ে একাউন্ট ভেরিফাই করুন!" });
+            return res.status(400).json({ success: false, message: "কাজ করতে আগে একাউন্ট ভেরিফাই করুন!" });
         }
 
         const todayStr = new Date().toISOString().split('T')[0];
@@ -176,18 +176,13 @@ app.post('/api/submit-job', async (req, res) => {
             return res.status(400).json({ success: false, message: "উত্তর ভুল হয়েছে! আবার চেষ্টা করুন।" });
         }
 
-        // 🎯 15 টাকা নিশ্চিত করার জন্য ফিক্সড লজিক:
-        const rewardAmount = settings.dailyJobReward || 15;
-        user.balance += rewardAmount;
-        
+        // 🎯 টাস্ক কমপ্লিট বোনাস ১৫ টাকা নিশ্চিত করা
+        const reward = settings.dailyJobReward || 15;
+        user.balance += reward;
         user.lastJobCompletedDate = todayStr;
         await user.save();
 
-        res.json({ 
-            success: true, 
-            message: `সঠিক উত্তর! ৳${rewardAmount} যোগ করা হয়েছে।`, 
-            newBalance: user.balance 
-        });
+        res.json({ success: true, message: `সঠিক উত্তর! ৳${reward} যোগ করা হয়েছে।`, newBalance: user.balance });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
     }
@@ -197,9 +192,10 @@ app.post('/api/withdraw', async (req, res) => {
     try {
         const { userId, paymentNumber, amount } = req.body;
         const numAmount = Number(amount);
-
-        if (isNaN(numAmount) || numAmount < 50) {
-            return res.status(400).json({ success: false, message: "সর্বনিম্ন উইথড্র ৳৫০" });
+        
+        // 🎯 সর্বনিম্ন উইথড্র সীমা ১০০ টাকা করা হলো
+        if (isNaN(numAmount) || numAmount < 100) {
+            return res.status(400).json({ success: false, message: "সর্বনিম্ন উইথড্র ৳১০০" });
         }
 
         const user = await User.findById(userId);
@@ -309,7 +305,7 @@ app.post('/api/admin/approve-verification', async (req, res) => {
             if (user.referralId) {
                 const referrer = await User.findOne({ ownReferralCode: user.referralId });
                 if (referrer) {
-                    referrer.balance += 40; // 👈 রেফারার বোনাস ৪০ টাকা
+                    referrer.balance += 40;
                     await referrer.save();
                 }
             }
