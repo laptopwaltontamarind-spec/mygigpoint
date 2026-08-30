@@ -586,40 +586,45 @@
             </div>
         </div>
 
-        <div id="tab-job" class="tab-content" style="display:none;">
-            <div class="card luxury-job-card">
-                <div class="job-top-bar">
-                    <div class="job-badge-title">
-                        <span>⚡</span> দৈনিক স্পেশাল টাস্ক
-                    </div>
-                    <div class="job-live-indicator">
-                        <span class="job-live-dot"></span> সক্রিয় কাজ
-                    </div>
-                </div>
-
-                <div class="job-reward-banner">
-                    <div class="reward-info-left">
-                        <small>টাস্ক রিওয়ার্ড বোনাস</small>
-                        <span>৳15.০০</span>
-                    </div>
-                    <div class="reward-icon-chip">💎</div>
-                </div>
-
-                <div id="job-error" class="error-msg-box"></div>
-
-                <div class="question-box-wrapper">
-                    <label>আজকের গাণিতিক চ্যালেঞ্জ</label>
-                    <p id="job-q" class="question-text">প্রশ্ন লোড হচ্ছে...</p>
-                </div>
-
-                <div class="input-luxury-wrap">
-                    <input type="text" id="job-ans" placeholder="সঠিক উত্তর এখানে লিখুন..." autocomplete="off">
-                </div>
-
-                <button class="btn btn-luxury-submit" onclick="submitJob()">✨ উত্তর জমা দিয়ে ৳15 নিন</button>
+       <div id="tab-job" class="tab-content" style="display:none;">
+    <div class="card luxury-job-card">
+        <div class="job-top-bar">
+            <div class="job-badge-title">
+                <span>⚡</span> দৈনিক স্পেশাল টাস্ক
+            </div>
+            <div class="job-live-indicator">
+                <span class="job-live-dot"></span> সক্রিয় কাজ
             </div>
         </div>
 
+        <div class="job-reward-banner">
+            <div class="reward-info-left">
+                <small>টাস্ক রিওয়ার্ড বোনাস</small>
+                <span>৳15.০০</span>
+            </div>
+            <div class="reward-icon-chip">💎</div>
+        </div>
+
+        <!-- টাস্কের ছবি দেখানোর সেকশন -->
+        <div id="task-image-box" style="text-align: center; margin-bottom: 15px;">
+            <label style="display:block; margin-bottom:8px; color:#9ca3af; font-size:12px;">নিচের ছবিটি দেখে উত্তর খুঁজুন:</label>
+            <img id="job-img" src="" alt="Task Image" style="max-width: 100%; border-radius: 12px; border: 1px solid rgba(255, 215, 0, 0.4); display: none; margin: 0 auto;">
+        </div>
+
+        <div id="job-error" class="error-msg-box"></div>
+
+        <div class="question-box-wrapper">
+            <label>আজকের গাণিতিক চ্যালেঞ্জ</label>
+            <p id="job-q" class="question-text">প্রশ্ন লোড হচ্ছে...</p>
+        </div>
+
+        <div class="input-luxury-wrap">
+            <input type="text" id="job-ans" placeholder="সঠিক উত্তর এখানে লিখুন..." autocomplete="off">
+        </div>
+
+        <button class="btn btn-luxury-submit" onclick="submitJob()">✨ উত্তর জমা দিয়ে ৳15 নিন</button>
+    </div>
+</div>
         <div id="tab-withdraw" class="tab-content" style="display:none;">
             <div class="card">
                 <h3 style="color:#fff; margin-bottom:12px;">টাকা তুলুন (Withdraw)</h3>
@@ -934,18 +939,25 @@
         hideError('job-error');
     }
 
-    function submitJob() {
-        hideError('job-error');
-        if (currentUser.status !== 'verified') {
-            showError('job-error', 'কাজ জমা দেওয়ার জন্য একাউন্ট ভেরিফাই করুন!');
-            return;
-        }
+   function generateMathTask() {
+    // LocalStorage থেকে এডমিনের দেওয়া ছবি ও প্রশ্ন লোড করা
+    const adminTaskImage = localStorage.getItem('admin_task_image');
+    const jobImgEl = document.getElementById('job-img');
+    
+    if (adminTaskImage) {
+        jobImgEl.src = adminTaskImage;
+        jobImgEl.style.display = 'block';
+    } else {
+        jobImgEl.style.display = 'none';
+    }
 
-        const userAns = parseInt(document.getElementById('job-ans').value.trim(), 10);
-        if (isNaN(userAns) || userAns !== currentTask.answer) {
-            showError('job-error', 'ভুল উত্তর! সঠিক উত্তর দিয়ে চেষ্টা করুন।');
-            return;
-        }
+    const num1 = Math.floor(Math.random() * 20) + 1;
+    const num2 = Math.floor(Math.random() * 20) + 1;
+    currentTask = { num1: num1, num2: num2, answer: num1 + num2 };
+    document.getElementById('job-q').innerText = `${num1} + ${num2} = ?`;
+    document.getElementById('job-ans').value = '';
+    hideError('job-error');
+}
 
         currentUser.balance = (currentUser.balance || 0) + 15;
         currentUser.totalEarned = (currentUser.totalEarned || 0) + 15;
