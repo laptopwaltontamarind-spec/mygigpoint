@@ -251,7 +251,7 @@
                 let totalReceived = 0;
                 if (data.verifications) {
                     const approved = data.verifications.filter(v => v.status && v.status.toLowerCase() === 'approved');
-                    totalReceived = approved.length * 500;
+                    totalReceived = approved.length * 110;
                 }
                 document.getElementById('sum-received').innerText = `৳${totalReceived}`;
 
