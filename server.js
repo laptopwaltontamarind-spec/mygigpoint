@@ -180,7 +180,7 @@ app.post('/api/submit-job', async (req, res) => {
         // ২. সরাসরি ফিক্সড 60 টাকা টাস্ক রিওয়ার্ড প্রদান
         const reward = 60;
         user.balance += reward;
-        user.lastJobCompletedDate = todayStr;
+        user.lastJobCompletedDate = todayStr; 
         await user.save();
 
         res.json({ success: true, message: `সঠিক উত্তর! ৳${reward} যোগ করা হয়েছে।`, newBalance: user.balance });
